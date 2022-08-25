@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    [SerializeField] GameObject _startTurnButton;
     [SerializeField] GameObject _endTurnButton;
 
 
@@ -15,20 +14,13 @@ public class UIController : MonoBehaviour
         GameManager.Instance.OnEndTurn += EndTurnUI;
     }
 
-    private void Start()
-    {
-        _endTurnButton.SetActive(false);
-    }
-
     void BeginTurnUI()
     {
-        _startTurnButton.SetActive(false);
         _endTurnButton.SetActive(true);
     }
 
     void EndTurnUI()
     {
-        _startTurnButton.SetActive(true);
         _endTurnButton.SetActive(false);
     }
 }
