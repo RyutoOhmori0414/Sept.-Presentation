@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     [SerializeField] GameObject _endTurnButton;
+    [SerializeField] List<GameObject>Å@_cardMuzzles = new List<GameObject>();
 
     Animator _buttonAnimation;
 
@@ -18,6 +19,11 @@ public class UIController : MonoBehaviour
     private void Start()
     {
         _buttonAnimation = GameObject.Find("Canvas").GetComponent<Animator>();
+        foreach (var card in _cardMuzzles)
+        {
+            card.SetActive(false);
+        }
+
     }
 
     void BeginTurnUI()
@@ -28,11 +34,19 @@ public class UIController : MonoBehaviour
     public void SelectCard()
     {
         _buttonAnimation.SetBool("Fadeout", true);
+        foreach (var card in _cardMuzzles)
+        {
+            card.SetActive(true);
+        }
     }
 
     public void SelectButton()
     {
         _buttonAnimation.SetBool("Fadeout", false);
+        foreach (var card in _cardMuzzles)
+        {
+            card?.SetActive(false);
+        }
     }
 
     void EndTurnUI()
