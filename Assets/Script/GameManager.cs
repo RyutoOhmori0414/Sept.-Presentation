@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"{_turnCount}ƒ^[ƒ“–ÚI—¹");
         Invoke("BeginTurn", 3f);
     }
-    
+
     void CheckInstance()
     {
         if (_instance == null)
