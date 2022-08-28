@@ -701,24 +701,6 @@ MonoBehaviour:
   - {fileID: 28965581}
   - {fileID: 571621165}
   - {fileID: 1075057818}
---- !u!114 &1016859370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1016859366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f74ac2b87fb29f343a390a6c4c3dcac4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cardMuzzleSprite:
-  - {fileID: 329343243}
-  - {fileID: 1945176875}
-  - {fileID: 28965583}
-  - {fileID: 571621167}
-  - {fileID: 1075057820}
   _cardSprite:
   - {fileID: 21300000, guid: 778db73316cf1534ebe5b3e3bb0948a7, type: 3}
   - {fileID: 21300000, guid: 18601f9c92e9dff48aec7a6f782f7085, type: 3}
@@ -742,6 +724,18 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b9b8edadbc58db6458e819bbcdaa7330, type: 3}
   - {fileID: 21300000, guid: 26cf57ee59321644db5dc854aef4fc79, type: 3}
   - {fileID: 21300000, guid: 90c3b93f53e11bd42826331852a88939, type: 3}
+--- !u!114 &1016859370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1016859366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f74ac2b87fb29f343a390a6c4c3dcac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1075057818
 GameObject:
   m_ObjectHideFlags: 0
