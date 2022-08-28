@@ -7,8 +7,11 @@ public class UIController : MonoBehaviour
 {
     [SerializeField] GameObject _endTurnButton;
     [SerializeField] List<GameObject>　_cardMuzzles = new List<GameObject>();
+    List<Image> _cardImages = new List<Image>();
 
     Animator _buttonAnimation;
+    [Tooltip("カードのスプライト")]
+    [SerializeField] List<Sprite> _cardSprite = new List<Sprite>();
 
 
     private void OnEnable()
@@ -22,13 +25,15 @@ public class UIController : MonoBehaviour
         foreach (var card in _cardMuzzles)
         {
             card.SetActive(false);
+            _cardImages.Add(card.GetComponent<Image>());
         }
-
+        ShuffleCard();
     }
 
     void BeginTurnUI()
     {
         _buttonAnimation.SetBool("Turn", true);
+        ShuffleCard();
     }
 
     public void SelectCard()
@@ -46,6 +51,18 @@ public class UIController : MonoBehaviour
         foreach (var card in _cardMuzzles)
         {
             card?.SetActive(false);
+        }
+    }
+
+    void ShuffleCard()
+    {
+        var copySprite = _cardSprite;
+        foreach (var card in _cardImages)
+        {
+            int RSpriteIndex = Random.Range(0, copySprite.Count);
+            card.sprite = copySprite[RSpriteIndex];
+            card.SetNativeSize();
+            copySprite.RemoveAt(RSpriteIndex);
         }
     }
 
