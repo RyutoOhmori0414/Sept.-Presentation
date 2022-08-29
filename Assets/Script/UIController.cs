@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    [SerializeField] GameObject _endTurnButton;
+    [Tooltip("カードSelectとエンドボタン")]
+    [SerializeField] List<GameObject> _selectAndEnd = new List<GameObject>();
     [SerializeField] List<GameObject>　_cardMuzzles = new List<GameObject>();
     List<Image> _cardImages = new List<Image>();
-
-    Animator _buttonAnimation;
     [Tooltip("カードのスプライト")]
     [SerializeField] List<Sprite> _cardSprite = new List<Sprite>();
+    [Tooltip("選ばれたカード")]
+    List<GameObject> _selectedCard= new List<GameObject>();
 
 
     private void OnEnable()
@@ -21,7 +22,6 @@ public class UIController : MonoBehaviour
     }
     private void Start()
     {
-        _buttonAnimation = GameObject.Find("Canvas").GetComponent<Animator>();
         foreach (var card in _cardMuzzles)
         {
             card.SetActive(false);
@@ -32,26 +32,21 @@ public class UIController : MonoBehaviour
 
     void BeginTurnUI()
     {
-        _buttonAnimation.SetBool("Turn", true);
+        _selectAndEnd.ForEach(i => i.SetActive(true));
         ShuffleCard();
+        _selectedCard.Clear();
     }
 
     public void SelectCard()
     {
-        _buttonAnimation.SetBool("Fadeout", true);
-        foreach (var card in _cardMuzzles)
-        {
-            card.SetActive(true);
-        }
+        _selectAndEnd.ForEach(i => i.SetActive(false));
+        _cardMuzzles.ForEach(i => i.SetActive(true));
     }
 
     public void SelectButton()
     {
-        _buttonAnimation.SetBool("Fadeout", false);
-        foreach (var card in _cardMuzzles)
-        {
-            card?.SetActive(false);
-        }
+        _selectAndEnd.ForEach(i => i.SetActive(true));
+        _cardMuzzles.ForEach(i => i.SetActive(false));
     }
 
     void ShuffleCard()
@@ -66,8 +61,20 @@ public class UIController : MonoBehaviour
         }
     }
 
+    public void ButtonGetGameObject(GameObject go)
+    {
+        _selectedCard.Add(go);
+        if (_selectedCard.Count + 1 > GameManager.Instance.TurnCount)
+        {
+            _cardMuzzles.ForEach(i => i.SetActive(false));
+            SelectButton();
+            GameManager.Instance.EndTurn();
+        }
+    }
+
     void EndTurnUI()
     {
-        _buttonAnimation.SetBool("Turn", false);
+        _selectAndEnd.ForEach(i => i.SetActive(false));
+        _cardMuzzles.ForEach(i => i.SetActive(false));
     }
 }
