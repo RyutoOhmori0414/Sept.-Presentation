@@ -947,6 +947,8 @@ MonoBehaviour:
   _selectAndEnd:
   - {fileID: 1622790129}
   - {fileID: 1410317263}
+  _backButton: {fileID: 2109309660}
+  _selectableCard: {fileID: 301159434}
   _cardMuzzles:
   - {fileID: 329343241}
   - {fileID: 1945176873}
