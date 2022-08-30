@@ -7,6 +7,10 @@ public class UIController : MonoBehaviour
 {
     [Tooltip("カードSelectとエンドボタン")]
     [SerializeField] List<GameObject> _selectAndEnd = new List<GameObject>();
+    [Tooltip("カード選択から戻るボタン")]
+    [SerializeField] GameObject _backButton;
+    [Tooltip("あと何枚選べるか表示するテキスト")]
+    [SerializeField] Text _selectableCard;
     [SerializeField] List<GameObject>　_cardMuzzles = new List<GameObject>();
     List<Image> _cardImages = new List<Image>();
     [Tooltip("カードのスプライト")]
@@ -28,6 +32,7 @@ public class UIController : MonoBehaviour
             _cardImages.Add(card.GetComponent<Image>());
         }
         ShuffleCard();
+        _selectableCard.enabled = false;
     }
 
     void BeginTurnUI()
@@ -35,18 +40,24 @@ public class UIController : MonoBehaviour
         _selectAndEnd.ForEach(i => i.SetActive(true));
         ShuffleCard();
         _selectedCard.Clear();
+        _selectableCard.text = $"残り{GameManager.Instance.TurnCount}枚";
+        _backButton.SetActive(false);
     }
 
     public void SelectCard()
     {
         _selectAndEnd.ForEach(i => i.SetActive(false));
         _cardMuzzles.ForEach(i => i.SetActive(true));
+        _backButton.SetActive(true);
+        _selectableCard.enabled = true;
     }
 
     public void SelectButton()
     {
         _selectAndEnd.ForEach(i => i.SetActive(true));
         _cardMuzzles.ForEach(i => i.SetActive(false));
+        _backButton.SetActive(false);
+        _selectableCard.enabled=false;
     }
 
     void ShuffleCard()
@@ -64,6 +75,7 @@ public class UIController : MonoBehaviour
     public void ButtonGetGameObject(GameObject go)
     {
         _selectedCard.Add(go);
+        _selectableCard.text = $"残り{GameManager.Instance.TurnCount - _selectedCard.Count}枚";
         if (_selectedCard.Count + 1 > GameManager.Instance.TurnCount)
         {
             _cardMuzzles.ForEach(i => i.SetActive(false));
