@@ -11,12 +11,12 @@ public class UIController : MonoBehaviour
     [SerializeField] GameObject _backButton;
     [Tooltip("あと何枚選べるか表示するテキスト")]
     [SerializeField] Text _selectableCard;
-    [SerializeField] List<GameObject>　_cardMuzzles = new List<GameObject>();
+    [SerializeField] List<GameObject> _cardMuzzles = new List<GameObject>();
     List<Image> _cardImages = new List<Image>();
     [Tooltip("カードのスプライト")]
     [SerializeField] List<Sprite> _cardSprite = new List<Sprite>();
     [Tooltip("選ばれたカード")]
-    List<GameObject> _selectedCard= new List<GameObject>();
+    List<GameObject> _selectedCard = new List<GameObject>();
 
 
     private void OnEnable()
@@ -57,7 +57,7 @@ public class UIController : MonoBehaviour
         _selectAndEnd.ForEach(i => i.SetActive(true));
         _cardMuzzles.ForEach(i => i.SetActive(false));
         _backButton.SetActive(false);
-        _selectableCard.enabled=false;
+        _selectableCard.enabled = false;
     }
 
     void ShuffleCard()
@@ -65,7 +65,7 @@ public class UIController : MonoBehaviour
         var copySprite = _cardSprite;
         foreach (var card in _cardImages)
         {
-            int RSpriteIndex = Random.Range(0, copySprite.Count);
+            int RSpriteIndex = UnityEngine.Random.Range(0, copySprite.Count);
             card.sprite = copySprite[RSpriteIndex];
             card.SetNativeSize();
             copySprite.RemoveAt(RSpriteIndex);
@@ -74,10 +74,22 @@ public class UIController : MonoBehaviour
 
     public void ButtonGetGameObject(GameObject go)
     {
-        _selectedCard.Add(go);
+        if (!_selectedCard.Contains(go))
+        {
+            _selectedCard.Add(go);
+            go.GetComponent<Image>().color = Color.gray;
+        }
+        else
+        {
+            _selectedCard.Remove(go);
+            go.GetComponent<Image>().color = Color.white;
+        }
+
         _selectableCard.text = $"残り{GameManager.Instance.TurnCount - _selectedCard.Count}枚";
+
         if (_selectedCard.Count + 1 > GameManager.Instance.TurnCount)
         {
+            _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
             _cardMuzzles.ForEach(i => i.SetActive(false));
             SelectButton();
             GameManager.Instance.EndTurn();
