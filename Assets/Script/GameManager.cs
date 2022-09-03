@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public event Action OnEndTurn;
     /// <summary>ターンのカウント</summary>
     int _turnCount = 0;
+    
     public int TurnCount
     { get => _turnCount; }
 
