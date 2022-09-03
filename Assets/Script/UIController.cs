@@ -17,6 +17,8 @@ public class UIController : MonoBehaviour
     [SerializeField] List<Sprite> _cardSprite = new List<Sprite>();
     [Tooltip("選ばれたカード")]
     List<GameObject> _selectedCard = new List<GameObject>();
+    [Tooltip("攻撃対象")]
+    [SerializeField] GameObject _enemy;
 
 
     private void OnEnable()
@@ -62,7 +64,7 @@ public class UIController : MonoBehaviour
 
     void ShuffleCard()
     {
-        var copySprite = _cardSprite;
+        var copySprite = new List<Sprite>(_cardSprite);
         foreach (var card in _cardImages)
         {
             int RSpriteIndex = UnityEngine.Random.Range(0, copySprite.Count);
@@ -85,10 +87,12 @@ public class UIController : MonoBehaviour
             go.GetComponent<Image>().color = Color.white;
         }
 
-        _selectableCard.text = $"残り{GameManager.Instance.TurnCount - _selectedCard.Count}枚";
+        int CurrentSelectableCards = GameManager.Instance.TurnCount % 5;
+        _selectableCard.text = $"残り{CurrentSelectableCards - _selectedCard.Count}枚";
 
-        if (_selectedCard.Count + 1 > GameManager.Instance.TurnCount)
+        if (_selectedCard.Count > CurrentSelectableCards)
         {
+            _enemy.GetComponent<GoblinController>().DecreaseHP(20);
             _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
             _cardMuzzles.ForEach(i => i.SetActive(false));
             SelectButton();
