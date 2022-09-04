@@ -9,22 +9,26 @@ public class GoblinController : MonoBehaviour
     [SerializeField] Slider _hpSlider;
     [Tooltip("このエネミーのhp")]
     [SerializeField] float _hp = default;
+    [Tooltip("このエネミーの攻撃力")]
+    [SerializeField] float _attack = default;
     /// <summary>現在のhp</summary>
     float _currentHP = default;
-    
-    // Start is called before the first frame update
+
+    private void OnEnable()
+    {
+        GameManager.Instance.OnEndTurn += _enemyAttack;
+    }
     void Start()
     {
         _currentHP = _hp;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        GameManager.Instance.OnEndTurn -= _enemyAttack;
     }
 
-    public void DecreaseHP(int damage)
+    public void DecreaseEnemyHP(int damage)
     {
         _currentHP -= damage;
         _hpSlider.DOValue(_currentHP / _hp, 0.5f);
@@ -32,5 +36,10 @@ public class GoblinController : MonoBehaviour
         {
             Debug.Log($"{this.gameObject.name}は死にました");
         }
+    }
+
+    void _enemyAttack()
+    {
+        PlayerController.CurrentPlayerHP -= _attack;
     }
 }
