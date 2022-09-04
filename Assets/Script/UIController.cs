@@ -92,7 +92,7 @@ public class UIController : MonoBehaviour
 
         if (_selectedCard.Count > CurrentSelectableCards)
         {
-            _enemy.GetComponent<GoblinController>().DecreaseHP(20);
+            _enemy.GetComponent<GoblinController>().DecreaseEnemyHP(20);
             _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
             _cardMuzzles.ForEach(i => i.SetActive(false));
             SelectButton();
