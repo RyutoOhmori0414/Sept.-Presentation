@@ -20,6 +20,9 @@ public class UIController : MonoBehaviour
     [Tooltip("攻撃対象")]
     [SerializeField] GameObject _enemy;
 
+    /// <summary>即死</summary>
+    bool _instantDeath = false;
+
 
     private void OnEnable()
     {
@@ -79,12 +82,24 @@ public class UIController : MonoBehaviour
         if (!_selectedCard.Contains(go))
         {
             _selectedCard.Add(go);
-            go.GetComponent<Image>().color = Color.gray;
+            Image image = go.GetComponent<Image>();
+            image.color = Color.gray;
+
+            if (image.sprite.name.Contains("死神"))
+            {
+                _instantDeath = true;
+            }
         }
         else
         {
             _selectedCard.Remove(go);
-            go.GetComponent<Image>().color = Color.white;
+            Image image = go.GetComponent<Image>();
+            image.color = Color.white;
+
+            if (image.sprite.name.Contains("死神"))
+            {
+                _instantDeath = true;
+            }
         }
 
         int CurrentSelectableCards = GameManager.Instance.TurnCount % 5;
@@ -92,7 +107,16 @@ public class UIController : MonoBehaviour
 
         if (_selectedCard.Count > CurrentSelectableCards)
         {
-            _enemy.GetComponent<GoblinController>().DecreaseEnemyHP(20);
+            int damage = 20;
+            //ダメージ補正を追加
+            if(_instantDeath)
+            {
+                damage = 3000;
+                _instantDeath = false;
+                Debug.Log("即死！！");
+            }
+
+            _enemy.GetComponent<GoblinController>().DecreaseEnemyHP(damage);
             _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
             _cardMuzzles.ForEach(i => i.SetActive(false));
             SelectButton();

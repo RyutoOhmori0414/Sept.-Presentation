@@ -35,6 +35,7 @@ public class GoblinController : MonoBehaviour
         if (_currentHP <= 0)
         {
             Debug.Log($"{this.gameObject.name}‚ÍŽ€‚É‚Ü‚µ‚½");
+            GetComponent<SpriteRenderer>().DOFade(0f, 3f).OnComplete(() => Destroy(this.gameObject));
         }
     }
 
