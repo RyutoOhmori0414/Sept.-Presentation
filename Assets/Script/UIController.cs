@@ -21,7 +21,9 @@ public class UIController : MonoBehaviour
     [SerializeField] GameObject _enemy;
 
     /// <summary>即死</summary>
-    bool _instantDeath = false;
+    int _instantDeath = 0;
+    bool _powerUp = false;
+    bool _guardUp = false;
 
 
     private void OnEnable()
@@ -85,9 +87,18 @@ public class UIController : MonoBehaviour
             Image image = go.GetComponent<Image>();
             image.color = Color.gray;
 
-            if (image.sprite.name.Contains("死神"))
+            //特殊効果があるカードが選ばれた際フラグを立てる
+            if (image.sprite.name.Contains("死神") || image.sprite.name.Contains("死"))
             {
-                _instantDeath = true;
+                _instantDeath++;
+            }
+            else if (image.sprite.name.Contains("力"))
+            {
+                _powerUp = true;
+            }
+            else if (image.sprite.name.Contains("戦車"))
+            {
+                _guardUp = true;
             }
         }
         else
@@ -96,24 +107,47 @@ public class UIController : MonoBehaviour
             Image image = go.GetComponent<Image>();
             image.color = Color.white;
 
-            if (image.sprite.name.Contains("死神"))
+            //特殊効果があるカードの選択が解除された際フラグも取り消す
+            if (image.sprite.name.Contains("死神") || image.sprite.name.Contains("死"))
             {
-                _instantDeath = true;
+                _instantDeath--;
+            }
+            else if (image.sprite.name.Contains("力"))
+            {
+                _powerUp = false;
+            }
+            else if (image.sprite.name.Contains("戦車"))
+            {
+                _guardUp = false;
             }
         }
 
         int CurrentSelectableCards = GameManager.Instance.TurnCount % 5;
-        _selectableCard.text = $"残り{CurrentSelectableCards - _selectedCard.Count}枚";
+        _selectableCard.text = $"残り{CurrentSelectableCards - _selectedCard.Count + 1}枚";
 
         if (_selectedCard.Count > CurrentSelectableCards)
         {
-            int damage = 20;
+            float damage = PlayerController.PlayerAttack;
             //ダメージ補正を追加
-            if(_instantDeath)
+            //フラグが立つと即死効果を確率で発生
+            if(_instantDeath > 0)
             {
-                damage = 3000;
-                _instantDeath = false;
+                damage = 3000f;
+                _instantDeath = 0;
                 Debug.Log("即死！！");
+            }
+            //フラグが立つとダメージアップ
+            else if (_powerUp)
+            {
+                damage = damage * 1.5f;
+                _powerUp = false;
+                Debug.Log("クリティカル！！");
+            }
+            //フラグが立つとガードアップ
+            else if (_guardUp)
+            {
+                GoblinController.CurrentAttack = 0.5f;
+                Debug.Log("ガードアップ！！");
             }
 
             _enemy.GetComponent<GoblinController>().DecreaseEnemyHP(damage);
@@ -129,4 +163,5 @@ public class UIController : MonoBehaviour
         _selectAndEnd.ForEach(i => i.SetActive(false));
         _cardMuzzles.ForEach(i => i.SetActive(false));
     }
+
 }

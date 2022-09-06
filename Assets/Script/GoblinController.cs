@@ -13,6 +13,13 @@ public class GoblinController : MonoBehaviour
     [SerializeField] float _attack = default;
     /// <summary>Œ»İ‚Ìhp</summary>
     float _currentHP = default;
+    /// <summary>Œ»İ‚ÌUŒ‚—Í</summary>
+    public static float _currentAttack = default;
+    /// <summary>ƒSƒuƒŠƒ“‚ÌUŒ‚—Í‚É‚©‚¯‚é”{—¦‚ğ‘ã“ü‚µ‚Ä‚Ë</summary>
+    public static float CurrentAttack
+    {
+        set => _currentAttack = _currentAttack * value;
+    }
 
     private void OnEnable()
     {
@@ -21,6 +28,7 @@ public class GoblinController : MonoBehaviour
     void Start()
     {
         _currentHP = _hp;
+        _currentAttack = _attack;
     }
 
     private void OnDisable()
@@ -28,9 +36,10 @@ public class GoblinController : MonoBehaviour
         GameManager.Instance.OnEndTurn -= _enemyAttack;
     }
 
-    public void DecreaseEnemyHP(int damage)
+    public void DecreaseEnemyHP(float damage)
     {
         _currentHP -= damage;
+        Debug.Log($"{damage}ƒ_ƒ[ƒW—^‚¦‚½II");
         _hpSlider.DOValue(_currentHP / _hp, 0.5f);
         if (_currentHP <= 0)
         {
@@ -41,6 +50,7 @@ public class GoblinController : MonoBehaviour
 
     void _enemyAttack()
     {
-        PlayerController.CurrentPlayerHP -= _attack;
+        PlayerController.PlayerDamage(_currentAttack);
+        _currentAttack = _attack;
     }
 }
