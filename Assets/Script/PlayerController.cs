@@ -10,14 +10,17 @@ public class PlayerController : MonoBehaviour
     [Header("プレイヤーのHPを表示するスライダー")]
     [SerializeField] Slider _playerHPSlider;
     [Header("プレイヤーの攻撃力"), SerializeField] static float _playerAttack = 20f;
-
-
-    public static float PlayerAttack
+    public float PlayerAttack
     {
         get => _playerAttack;
     }
+
     /// <summary>現在のHP</summary>
-    static float _currentPlayerHP = default;
+    float _currentPlayerHP = default;
+    public float CurrentPlayerHP
+    {
+        get => _currentPlayerHP;
+    }
 
     private void Start()
     {
@@ -29,7 +32,7 @@ public class PlayerController : MonoBehaviour
         _playerHPSlider.value = _currentPlayerHP / _playerHP;
     }
 
-    public static void PlayerDamage(float damege)
+    public void PlayerDamage(float damege)
     {
         _currentPlayerHP -= damege;
         Debug.Log($"{damege}ダメージ食らった");

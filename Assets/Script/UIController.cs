@@ -20,10 +20,15 @@ public class UIController : MonoBehaviour
     [Tooltip("攻撃対象")]
     [SerializeField] GameObject _enemy;
 
+    PlayerController _playerController;
+    GoblinController _goblinController;
+
     /// <summary>即死</summary>
     int _instantDeath = 0;
     bool _powerUp = false;
     bool _guardUp = false;
+    bool _average = false;
+    RandomFlag _fool = RandomFlag.Normal;
 
 
     private void OnEnable()
@@ -40,6 +45,9 @@ public class UIController : MonoBehaviour
         }
         ShuffleCard();
         _selectableCard.enabled = false;
+
+        _playerController = GameObject.FindObjectOfType<PlayerController>();
+        _goblinController = _enemy.GetComponent<GoblinController>();
     }
 
     void BeginTurnUI()
@@ -100,6 +108,26 @@ public class UIController : MonoBehaviour
             {
                 _guardUp = true;
             }
+            else if (image.sprite.name.Contains("節制"))
+            {
+                _average = true;
+            }
+            else if (image.sprite.name.Contains("愚者"))
+            {
+                int randomValue = Random.Range(0, 3);
+                if (randomValue == 0)
+                {
+                    _fool = RandomFlag.InstantDeath;
+                }
+                else if (randomValue == 1)
+                {
+                    _fool = RandomFlag.PowerUp;
+                }
+                else if (randomValue == 2)
+                {
+                    _fool = RandomFlag.GuardUp;
+                }
+            }
         }
         else
         {
@@ -120,6 +148,14 @@ public class UIController : MonoBehaviour
             {
                 _guardUp = false;
             }
+            else if (image.sprite.name.Contains("節制"))
+            {
+                _average = false;
+            }
+            else if (image.sprite.name.Contains("愚者"))
+            {
+                _fool = RandomFlag.Normal;
+            }
         }
 
         int CurrentSelectableCards = GameManager.Instance.TurnCount % 5;
@@ -127,30 +163,42 @@ public class UIController : MonoBehaviour
 
         if (_selectedCard.Count > CurrentSelectableCards)
         {
-            float damage = PlayerController.PlayerAttack;
+            float gDamage = _playerController.PlayerAttack;
+            float pDamage = _goblinController.Attack;
             //ダメージ補正を追加
             //フラグが立つと即死効果を確率で発生
-            if(_instantDeath > 0)
+            if(_instantDeath > 0 || _fool == RandomFlag.InstantDeath)
             {
-                damage = 3000f;
+                gDamage = 3000f;
                 _instantDeath = 0;
                 Debug.Log("即死！！");
+                _fool = RandomFlag.Normal;
+            }
+            //フラグが立つと敵と自分のHPが二人の平均になる
+            else if (_average)
+            {
+                float av = (_playerController.CurrentPlayerHP + _goblinController.CurrentEnemyHP) / 2;
+                gDamage = -(_playerController.CurrentPlayerHP - av);
+                pDamage = -(_goblinController.CurrentEnemyHP - av);
             }
             //フラグが立つとダメージアップ
-            else if (_powerUp)
+            else if (_powerUp || _fool == RandomFlag.PowerUp)
             {
-                damage = damage * 1.5f;
+                gDamage = gDamage * 1.5f;
                 _powerUp = false;
                 Debug.Log("クリティカル！！");
+                _fool = RandomFlag.Normal;
             }
             //フラグが立つとガードアップ
-            else if (_guardUp)
+            if (_guardUp || _fool == RandomFlag.GuardUp)
             {
-                GoblinController.CurrentAttack = 0.5f;
+                _goblinController.CurrentAttack = 0.5f;
                 Debug.Log("ガードアップ！！");
+                _fool = RandomFlag.Normal;
             }
 
-            _enemy.GetComponent<GoblinController>().DecreaseEnemyHP(damage);
+            _goblinController.DecreaseEnemyHP(gDamage);
+            _playerController.PlayerDamage(pDamage);
             _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
             _cardMuzzles.ForEach(i => i.SetActive(false));
             SelectButton();
@@ -164,4 +212,11 @@ public class UIController : MonoBehaviour
         _cardMuzzles.ForEach(i => i.SetActive(false));
     }
 
+    enum RandomFlag
+    {
+        Normal,
+        InstantDeath,
+        PowerUp,
+        GuardUp
+    }
 }
