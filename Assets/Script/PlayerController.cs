@@ -35,6 +35,13 @@ public class PlayerController : MonoBehaviour
     public void PlayerDamage(float damege)
     {
         _currentPlayerHP -= damege;
-        Debug.Log($"{damege}ダメージ食らった");
+        if (damege > 0)
+        {
+            Debug.Log($"{damege}ダメージ食らった");
+        }
+        else
+        {
+            Debug.Log($"{-damege}回復した");
+        }
     }
 }

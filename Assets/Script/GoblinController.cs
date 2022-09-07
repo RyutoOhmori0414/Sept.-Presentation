@@ -42,7 +42,14 @@ public class GoblinController : MonoBehaviour
     public void DecreaseEnemyHP(float damage)
     {
         _currentHP -= damage;
-        Debug.Log($"{damage}ダメージ与えた！！");
+        if (damage > 0)
+        {
+            Debug.Log($"{damage}ダメージ与えた！！");
+        }
+        else
+        {
+            Debug.Log($"{-damage}回復した");
+        }
         _hpSlider.DOValue(_currentHP / _hp, 0.5f);
         if (_currentHP <= 0)
         {

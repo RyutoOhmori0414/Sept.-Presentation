@@ -29,6 +29,7 @@ public class UIController : MonoBehaviour
     bool _powerUp = false;
     bool _guardUp = false;
     bool _average = false;
+    bool _heal = false;
     RandomFlag _fool = RandomFlag.Normal;
 
 
@@ -113,9 +114,13 @@ public class UIController : MonoBehaviour
             {
                 _average = true;
             }
+            else if (image.sprite.name.Contains("女帝"))
+            {
+                _heal = true;
+            }
             else if (image.sprite.name.Contains("愚者"))
             {
-                int randomValue = Random.Range(0, 3);
+                int randomValue = Random.Range(0, 5);
                 if (randomValue == 0)
                 {
                     _fool = RandomFlag.InstantDeath;
@@ -127,6 +132,14 @@ public class UIController : MonoBehaviour
                 else if (randomValue == 2)
                 {
                     _fool = RandomFlag.GuardUp;
+                }
+                else if (randomValue == 3)
+                {
+                    _fool = RandomFlag.Average;
+                }
+                else if (randomValue == 4)
+                {
+                    _fool = RandomFlag.Heal;
                 }
             }
         }
@@ -152,6 +165,10 @@ public class UIController : MonoBehaviour
             else if (image.sprite.name.Contains("節制"))
             {
                 _average = false;
+            }
+            else if (image.sprite.name.Contains("女帝"))
+            {
+                _heal = false;
             }
             else if (image.sprite.name.Contains("愚者"))
             {
@@ -182,7 +199,7 @@ public class UIController : MonoBehaviour
                 }
             }
             //フラグが立つと敵と自分のHPが二人の平均になる
-            else if (_average && _instantDeath == 0)
+            else if ((_average || _fool == RandomFlag.Average) && _instantDeath == 0)
             {
                 float av = (_playerController.CurrentPlayerHP + _goblinController.CurrentEnemyHP) / 2;
                 gDamage = -(_playerController.CurrentPlayerHP - av);
@@ -194,6 +211,11 @@ public class UIController : MonoBehaviour
                 gDamage = gDamage * 1.5f;
                 _powerUp = false;
                 Debug.Log("クリティカル！！");
+            }
+            if (_heal || _fool == RandomFlag.Heal)
+            {
+                _playerController.PlayerDamage(-10);
+                gDamage = 0f;
             }
             //フラグが立つとガードアップ
             if (_guardUp || _fool == RandomFlag.GuardUp)
@@ -207,6 +229,7 @@ public class UIController : MonoBehaviour
             _average = false;
             _powerUp = false;
             _guardUp = false;
+            _heal = false;
             _fool = RandomFlag.Normal;
 
             _goblinController.DecreaseEnemyHP(gDamage);
@@ -229,6 +252,8 @@ public class UIController : MonoBehaviour
         Normal,
         InstantDeath,
         PowerUp,
-        GuardUp
+        GuardUp,
+        Average,
+        Heal
     }
 }
