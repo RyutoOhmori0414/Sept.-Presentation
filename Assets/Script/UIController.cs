@@ -19,6 +19,7 @@ public class UIController : MonoBehaviour
     List<GameObject> _selectedCard = new List<GameObject>();
     [Tooltip("攻撃対象")]
     [SerializeField] GameObject _enemy;
+    [Header("選べるカードの枚数"), SerializeField] int _cards = default;
 
     PlayerController _playerController;
     GoblinController _goblinController;
@@ -55,7 +56,7 @@ public class UIController : MonoBehaviour
         _selectAndEnd.ForEach(i => i.SetActive(true));
         ShuffleCard();
         _selectedCard.Clear();
-        _selectableCard.text = $"残り{GameManager.Instance.TurnCount}枚";
+        _selectableCard.text = $"残り{_cards}枚";
         _backButton.SetActive(false);
     }
 
@@ -158,24 +159,30 @@ public class UIController : MonoBehaviour
             }
         }
 
-        int CurrentSelectableCards = GameManager.Instance.TurnCount % 5;
-        _selectableCard.text = $"残り{CurrentSelectableCards - _selectedCard.Count + 1}枚";
+        _selectableCard.text = $"残り{_cards - _selectedCard.Count}枚";
 
-        if (_selectedCard.Count > CurrentSelectableCards)
+        if (_selectedCard.Count + 1 > _cards)
         {
             float gDamage = _playerController.PlayerAttack;
             float pDamage = _goblinController.Attack;
             //ダメージ補正を追加
             //フラグが立つと即死効果を確率で発生
-            if(_instantDeath > 0 || _fool == RandomFlag.InstantDeath)
+            if (_instantDeath > 0 || _fool == RandomFlag.InstantDeath)
             {
-                gDamage = 3000f;
-                _instantDeath = 0;
-                Debug.Log("即死！！");
-                _fool = RandomFlag.Normal;
+                if (Random.Range(0, 10) < 5)
+                {
+                    gDamage = 3000f;
+                    _instantDeath = 0;
+                    Debug.Log("即死！！");
+                }
+                else
+                {
+                    _instantDeath = 0;
+                    Debug.Log("即死失敗");
+                }
             }
             //フラグが立つと敵と自分のHPが二人の平均になる
-            else if (_average)
+            else if (_average && _instantDeath == 0)
             {
                 float av = (_playerController.CurrentPlayerHP + _goblinController.CurrentEnemyHP) / 2;
                 gDamage = -(_playerController.CurrentPlayerHP - av);
@@ -187,15 +194,20 @@ public class UIController : MonoBehaviour
                 gDamage = gDamage * 1.5f;
                 _powerUp = false;
                 Debug.Log("クリティカル！！");
-                _fool = RandomFlag.Normal;
             }
             //フラグが立つとガードアップ
             if (_guardUp || _fool == RandomFlag.GuardUp)
             {
-                _goblinController.CurrentAttack = 0.5f;
+                pDamage = pDamage / 2f;
                 Debug.Log("ガードアップ！！");
-                _fool = RandomFlag.Normal;
             }
+
+            // フラグの初期化
+            _instantDeath = 0;
+            _average = false;
+            _powerUp = false;
+            _guardUp = false;
+            _fool = RandomFlag.Normal;
 
             _goblinController.DecreaseEnemyHP(gDamage);
             _playerController.PlayerDamage(pDamage);

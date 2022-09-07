@@ -1574,6 +1574,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 26cf57ee59321644db5dc854aef4fc79, type: 3}
   - {fileID: 21300000, guid: 90c3b93f53e11bd42826331852a88939, type: 3}
   _enemy: {fileID: 448241011}
+  _cards: 3
 --- !u!114 &1016859370
 MonoBehaviour:
   m_ObjectHideFlags: 0
