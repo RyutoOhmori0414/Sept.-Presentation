@@ -212,13 +212,14 @@ public class UIController : MonoBehaviour
                 _powerUp = false;
                 Debug.Log("クリティカル！！");
             }
-            if (_heal || _fool == RandomFlag.Heal)
+            //フラグが立つと回復
+            if ((_heal || _fool == RandomFlag.Heal) && !_average)
             {
                 _playerController.PlayerDamage(-10);
                 gDamage = 0f;
             }
             //フラグが立つとガードアップ
-            if (_guardUp || _fool == RandomFlag.GuardUp)
+            if ((_guardUp || _fool == RandomFlag.GuardUp) && !_average)
             {
                 pDamage = pDamage / 2f;
                 Debug.Log("ガードアップ！！");

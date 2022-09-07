@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _playerHP = default;
     [Header("プレイヤーのHPを表示するスライダー")]
     [SerializeField] Slider _playerHPSlider;
-    [Header("プレイヤーの攻撃力"), SerializeField] static float _playerAttack = 20f;
+    [Header("プレイヤーの攻撃力"), SerializeField] float _playerAttack = 20f;
     public float PlayerAttack
     {
         get => _playerAttack;
@@ -37,11 +37,11 @@ public class PlayerController : MonoBehaviour
         _currentPlayerHP -= damege;
         if (damege > 0)
         {
-            Debug.Log($"{damege}ダメージ食らった");
+            Debug.Log($"Playerは{damege}ダメージ受けた");
         }
         else
         {
-            Debug.Log($"{-damege}回復した");
+            Debug.Log($"Playerは{-damege}回復した");
         }
     }
 }
