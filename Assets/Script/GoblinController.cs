@@ -11,29 +11,32 @@ public class GoblinController : MonoBehaviour
     [SerializeField] float _hp = default;
     [Tooltip("‚±‚ÌƒGƒlƒ~[‚ÌUŒ‚—Í")]
     [SerializeField] float _attack = default;
+    public float Attack
+    {
+        get => _attack;
+    }
+
     /// <summary>Œ»İ‚Ìhp</summary>
     float _currentHP = default;
+    public float CurrentEnemyHP
+    {
+        get => _currentHP;
+    }
     /// <summary>Œ»İ‚ÌUŒ‚—Í</summary>
-    public static float _currentAttack = default;
+    float _currentAttack = default;
     /// <summary>ƒSƒuƒŠƒ“‚ÌUŒ‚—Í‚É‚©‚¯‚é”{—¦‚ğ‘ã“ü‚µ‚Ä‚Ë</summary>
-    public static float CurrentAttack
+    public float CurrentAttack
     {
         set => _currentAttack = _currentAttack * value;
     }
 
-    private void OnEnable()
-    {
-        GameManager.Instance.OnEndTurn += _enemyAttack;
-    }
+    PlayerController _playerController;
+
     void Start()
     {
         _currentHP = _hp;
         _currentAttack = _attack;
-    }
-
-    private void OnDisable()
-    {
-        GameManager.Instance.OnEndTurn -= _enemyAttack;
+        _playerController = GameObject.FindObjectOfType<PlayerController>();
     }
 
     public void DecreaseEnemyHP(float damage)
@@ -46,11 +49,5 @@ public class GoblinController : MonoBehaviour
             Debug.Log($"{this.gameObject.name}‚Í€‚É‚Ü‚µ‚½");
             GetComponent<SpriteRenderer>().DOFade(0f, 3f).OnComplete(() => Destroy(this.gameObject));
         }
-    }
-
-    void _enemyAttack()
-    {
-        PlayerController.PlayerDamage(_currentAttack);
-        _currentAttack = _attack;
     }
 }
