@@ -27,7 +27,7 @@ public class GoblinController : MonoBehaviour
     /// <summary>ƒSƒuƒŠƒ“‚ÌUŒ‚—Í‚É‚©‚¯‚é”{—¦‚ğ‘ã“ü‚µ‚Ä‚Ë</summary>
     public float CurrentAttack
     {
-        set => _currentAttack = _currentAttack * value;
+        set => _currentAttack = value;
     }
 
     PlayerController _playerController;
