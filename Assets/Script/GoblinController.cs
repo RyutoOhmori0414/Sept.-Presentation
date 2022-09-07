@@ -44,11 +44,11 @@ public class GoblinController : MonoBehaviour
         _currentHP -= damage;
         if (damage > 0)
         {
-            Debug.Log($"{damage}ダメージ与えた！！");
+            Debug.Log($"Enemyは{damage}ダメージ受けた！！");
         }
         else
         {
-            Debug.Log($"{-damage}回復した");
+            Debug.Log($"Enemyは{-damage}回復した");
         }
         _hpSlider.DOValue(_currentHP / _hp, 0.5f);
         if (_currentHP <= 0)
