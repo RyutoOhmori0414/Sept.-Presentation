@@ -30,7 +30,8 @@ public class UIController : MonoBehaviour
     bool _guardUp = false;
     bool _average = false;
     bool _heal = false;
-    RandomFlag _fool = RandomFlag.Normal;
+    StateFlag _fool = StateFlag.Normal;
+    List<StateFlag> _stateFlags = new List<StateFlag>();
 
 
     private void OnEnable()
@@ -123,23 +124,23 @@ public class UIController : MonoBehaviour
                 int randomValue = Random.Range(0, 5);
                 if (randomValue == 0)
                 {
-                    _fool = RandomFlag.InstantDeath;
+                    _fool = StateFlag.InstantDeath;
                 }
                 else if (randomValue == 1)
                 {
-                    _fool = RandomFlag.PowerUp;
+                    _fool = StateFlag.PowerUp;
                 }
                 else if (randomValue == 2)
                 {
-                    _fool = RandomFlag.GuardUp;
+                    _fool = StateFlag.GuardUp;
                 }
                 else if (randomValue == 3)
                 {
-                    _fool = RandomFlag.Average;
+                    _fool = StateFlag.Average;
                 }
                 else if (randomValue == 4)
                 {
-                    _fool = RandomFlag.Heal;
+                    _fool = StateFlag.Heal;
                 }
             }
         }
@@ -172,7 +173,7 @@ public class UIController : MonoBehaviour
             }
             else if (image.sprite.name.Contains("愚者"))
             {
-                _fool = RandomFlag.Normal;
+                _fool = StateFlag.Normal;
             }
         }
 
@@ -184,7 +185,7 @@ public class UIController : MonoBehaviour
             float pDamage = _goblinController.Attack;
             //ダメージ補正を追加
             //フラグが立つと即死効果を確率で発生
-            if (_instantDeath > 0 || _fool == RandomFlag.InstantDeath)
+            if (_instantDeath > 0 || _stateFlags.Contains(StateFlag.InstantDeath))
             {
                 if (Random.Range(0, 10) < 5)
                 {
@@ -199,27 +200,27 @@ public class UIController : MonoBehaviour
                 }
             }
             //フラグが立つと敵と自分のHPが二人の平均になる
-            else if ((_average || _fool == RandomFlag.Average) && _instantDeath == 0)
+            else if ((_average || _fool == StateFlag.Average) && _instantDeath == 0)
             {
                 float av = (_playerController.CurrentPlayerHP + _goblinController.CurrentEnemyHP) / 2;
                 gDamage = -(_playerController.CurrentPlayerHP - av);
                 pDamage = -(_goblinController.CurrentEnemyHP - av);
             }
             //フラグが立つとダメージアップ
-            else if (_powerUp || _fool == RandomFlag.PowerUp)
+            else if (_powerUp || _fool == StateFlag.PowerUp)
             {
                 gDamage = gDamage * 1.5f;
                 _powerUp = false;
                 Debug.Log("クリティカル！！");
             }
             //フラグが立つと回復
-            if ((_heal || _fool == RandomFlag.Heal) && !_average)
+            if ((_heal || _fool == StateFlag.Heal) && !_average)
             {
                 _playerController.PlayerDamage(-10);
                 gDamage = 0f;
             }
             //フラグが立つとガードアップ
-            if ((_guardUp || _fool == RandomFlag.GuardUp) && !_average)
+            if ((_guardUp || _fool == StateFlag.GuardUp) && !_average)
             {
                 pDamage = pDamage / 2f;
                 Debug.Log("ガードアップ！！");
@@ -231,7 +232,7 @@ public class UIController : MonoBehaviour
             _powerUp = false;
             _guardUp = false;
             _heal = false;
-            _fool = RandomFlag.Normal;
+            _fool = StateFlag.Normal;
 
             _goblinController.DecreaseEnemyHP(gDamage);
             _playerController.PlayerDamage(pDamage);
@@ -248,7 +249,7 @@ public class UIController : MonoBehaviour
         _cardMuzzles.ForEach(i => i.SetActive(false));
     }
 
-    enum RandomFlag
+    enum StateFlag
     {
         Normal,
         InstantDeath,
