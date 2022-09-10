@@ -24,12 +24,7 @@ public class UIController : MonoBehaviour
     PlayerController _playerController;
     GoblinController _goblinController;
 
-    /// <summary>即死</summary>
-    int _instantDeath = 0;
-    bool _powerUp = false;
-    bool _guardUp = false;
-    bool _average = false;
-    bool _heal = false;
+    
     StateFlag _fool = StateFlag.Normal;
     List<StateFlag> _stateFlags = new List<StateFlag>();
 
@@ -101,23 +96,23 @@ public class UIController : MonoBehaviour
             //特殊効果があるカードが選ばれた際フラグを立てる
             if (image.sprite.name.Contains("死神") || image.sprite.name.Contains("死"))
             {
-                _instantDeath++;
+                _stateFlags.Add(StateFlag.InstantDeath);
             }
             else if (image.sprite.name.Contains("力"))
             {
-                _powerUp = true;
+                _stateFlags.Add(StateFlag.PowerUp);
             }
             else if (image.sprite.name.Contains("戦車"))
             {
-                _guardUp = true;
+                _stateFlags.Add(StateFlag.GuardUp);
             }
             else if (image.sprite.name.Contains("節制"))
             {
-                _average = true;
+                _stateFlags.Add(StateFlag.Average);
             }
             else if (image.sprite.name.Contains("女帝"))
             {
-                _heal = true;
+                _stateFlags.Add(StateFlag.Heal);
             }
             else if (image.sprite.name.Contains("愚者"))
             {
@@ -153,23 +148,23 @@ public class UIController : MonoBehaviour
             //特殊効果があるカードの選択が解除された際フラグも取り消す
             if (image.sprite.name.Contains("死神") || image.sprite.name.Contains("死"))
             {
-                _instantDeath--;
+                _stateFlags.Remove(StateFlag.InstantDeath);
             }
             else if (image.sprite.name.Contains("力"))
             {
-                _powerUp = false;
+                _stateFlags.Remove(StateFlag.PowerUp);
             }
             else if (image.sprite.name.Contains("戦車"))
             {
-                _guardUp = false;
+                _stateFlags.Remove(StateFlag.GuardUp);
             }
             else if (image.sprite.name.Contains("節制"))
             {
-                _average = false;
+                _stateFlags.Remove(StateFlag.Average);
             }
             else if (image.sprite.name.Contains("女帝"))
             {
-                _heal = false;
+                _stateFlags.Remove(StateFlag.Heal);
             }
             else if (image.sprite.name.Contains("愚者"))
             {
@@ -185,53 +180,46 @@ public class UIController : MonoBehaviour
             float pDamage = _goblinController.Attack;
             //ダメージ補正を追加
             //フラグが立つと即死効果を確率で発生
-            if (_instantDeath > 0 || _stateFlags.Contains(StateFlag.InstantDeath))
+            if (_fool == StateFlag.InstantDeath || _stateFlags.Contains(StateFlag.InstantDeath))
             {
                 if (Random.Range(0, 10) < 5)
                 {
                     gDamage = 3000f;
-                    _instantDeath = 0;
                     Debug.Log("即死！！");
                 }
                 else
                 {
-                    _instantDeath = 0;
                     Debug.Log("即死失敗");
                 }
             }
             //フラグが立つと敵と自分のHPが二人の平均になる
-            else if ((_average || _fool == StateFlag.Average) && _instantDeath == 0)
+            else if ((_stateFlags.Contains(StateFlag.Average) || _fool == StateFlag.Average))
             {
                 float av = (_playerController.CurrentPlayerHP + _goblinController.CurrentEnemyHP) / 2;
                 gDamage = -(_playerController.CurrentPlayerHP - av);
                 pDamage = -(_goblinController.CurrentEnemyHP - av);
             }
             //フラグが立つとダメージアップ
-            else if (_powerUp || _fool == StateFlag.PowerUp)
+            else if (_stateFlags.Contains(StateFlag.PowerUp) || _fool == StateFlag.PowerUp)
             {
                 gDamage = gDamage * 1.5f;
-                _powerUp = false;
                 Debug.Log("クリティカル！！");
             }
             //フラグが立つと回復
-            if ((_heal || _fool == StateFlag.Heal) && !_average)
+            if ((_stateFlags.Contains(StateFlag.Heal) || _fool == StateFlag.Heal) && !_stateFlags.Contains(StateFlag.Average))
             {
                 _playerController.PlayerDamage(-10);
                 gDamage = 0f;
             }
             //フラグが立つとガードアップ
-            if ((_guardUp || _fool == StateFlag.GuardUp) && !_average)
+            if ((_stateFlags.Contains(StateFlag.GuardUp) || _fool == StateFlag.GuardUp) && !_stateFlags.Contains(StateFlag.Average))
             {
                 pDamage = pDamage / 2f;
                 Debug.Log("ガードアップ！！");
             }
 
             // フラグの初期化
-            _instantDeath = 0;
-            _average = false;
-            _powerUp = false;
-            _guardUp = false;
-            _heal = false;
+            _stateFlags.Clear();
             _fool = StateFlag.Normal;
 
             _goblinController.DecreaseEnemyHP(gDamage);
