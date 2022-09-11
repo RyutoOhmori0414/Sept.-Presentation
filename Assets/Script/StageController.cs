@@ -11,15 +11,18 @@ public class StageController : MonoBehaviour
     [Tooltip("BossWave‚Ì“G"), SerializeField]
     GameObject[] _waveBossEnemies = default;
 
-    // Start is called before the first frame update
-    void Start()
+    void CallWave1()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    void CallWave2()
     {
-        
+
+    }
+
+    void CallWaveBoss()
+    {
+
     }
 }
