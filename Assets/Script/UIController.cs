@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,11 +19,11 @@ public class UIController : MonoBehaviour
     [Tooltip("選ばれたカード")]
     List<GameObject> _selectedCard = new List<GameObject>();
     [Tooltip("攻撃対象")]
-    [SerializeField] GameObject _enemy;
+    [SerializeField] GameObject[] _enemies;
     [Header("選べるカードの枚数"), SerializeField] int _cards = default;
 
     PlayerController _playerController;
-    GoblinController _goblinController;
+    GoblinController[] _goblinController;
 
     
     StateFlag _fool = StateFlag.Normal;
@@ -45,7 +46,7 @@ public class UIController : MonoBehaviour
         _selectableCard.enabled = false;
 
         _playerController = GameObject.FindObjectOfType<PlayerController>();
-        _goblinController = _enemy.GetComponent<GoblinController>();
+        _goblinController = Array.ConvertAll(_enemies, i => i.GetComponent<GoblinController>());
     }
 
     void BeginTurnUI()
@@ -116,7 +117,7 @@ public class UIController : MonoBehaviour
             }
             else if (image.sprite.name.Contains("愚者"))
             {
-                int randomValue = Random.Range(0, 5);
+                int randomValue = UnityEngine.Random.Range(0, 5);
                 if (randomValue == 0)
                 {
                     _fool = StateFlag.InstantDeath;
@@ -176,60 +177,66 @@ public class UIController : MonoBehaviour
 
         if (_selectedCard.Count + 1 > _cards)
         {
-            float gDamage = _playerController.PlayerAttack;
-            float pDamage = _goblinController.Attack;
-            //ダメージ補正を追加
-            //フラグが立つと即死効果を確率で発生
-            if (_fool == StateFlag.InstantDeath || _stateFlags.Contains(StateFlag.InstantDeath))
-            {
-                if (Random.Range(0, 10) < 5)
-                {
-                    gDamage = 3000f;
-                    Debug.Log("即死！！");
-                }
-                else
-                {
-                    Debug.Log("即死失敗");
-                }
-            }
-            //フラグが立つと敵と自分のHPが二人の平均になる
-            else if ((_stateFlags.Contains(StateFlag.Average) || _fool == StateFlag.Average))
-            {
-                float av = (_playerController.CurrentPlayerHP + _goblinController.CurrentEnemyHP) / 2;
-                gDamage = -(_playerController.CurrentPlayerHP - av);
-                pDamage = -(_goblinController.CurrentEnemyHP - av);
-            }
-            //フラグが立つとダメージアップ
-            else if (_stateFlags.Contains(StateFlag.PowerUp) || _fool == StateFlag.PowerUp)
-            {
-                gDamage = gDamage * 1.5f;
-                Debug.Log("クリティカル！！");
-            }
-            //フラグが立つと回復
-            if ((_stateFlags.Contains(StateFlag.Heal) || _fool == StateFlag.Heal) && !_stateFlags.Contains(StateFlag.Average))
-            {
-                _playerController.PlayerDamage(-10);
-                gDamage = 0f;
-            }
-            //フラグが立つとガードアップ
-            if ((_stateFlags.Contains(StateFlag.GuardUp) || _fool == StateFlag.GuardUp) && !_stateFlags.Contains(StateFlag.Average))
-            {
-                pDamage = pDamage / 2f;
-                Debug.Log("ガードアップ！！");
-            }
-
-            // フラグの初期化
-            _stateFlags.Clear();
-            _fool = StateFlag.Normal;
-
-            _goblinController.DecreaseEnemyHP(gDamage);
-            _playerController.PlayerDamage(pDamage);
-            _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
+            //攻撃するキャラクターを選択する場面に移動
+            _backButton.SetActive(false);
             _cardMuzzles.ForEach(i => i.SetActive(false));
-            SelectButton();
-            GameManager.Instance.EndTurn();
+            GameObject.FindGameObjectsWithTag("ArrowMark");
+
+            //float gDamage = _playerController.PlayerAttack;
+            //float pDamage = _goblinController.Attack;
+            ////ダメージ補正を追加
+            ////フラグが立つと即死効果を確率で発生
+            //if (_fool == StateFlag.InstantDeath || _stateFlags.Contains(StateFlag.InstantDeath))
+            //{
+            //    if (UnityEngine.Random.Range(0, 10) < 5)
+            //    {
+            //        gDamage = 3000f;
+            //        Debug.Log("即死！！");
+            //    }
+            //    else
+            //    {
+            //        Debug.Log("即死失敗");
+            //    }
+            //}
+            ////フラグが立つと敵と自分のHPが二人の平均になる
+            //else if ((_stateFlags.Contains(StateFlag.Average) || _fool == StateFlag.Average))
+            //{
+            //    float av = (_playerController.CurrentPlayerHP + _goblinController.CurrentEnemyHP) / 2;
+            //    gDamage = -(_playerController.CurrentPlayerHP - av);
+            //    pDamage = -(_goblinController.CurrentEnemyHP - av);
+            //}
+            ////フラグが立つとダメージアップ
+            //else if (_stateFlags.Contains(StateFlag.PowerUp) || _fool == StateFlag.PowerUp)
+            //{
+            //    gDamage = gDamage * 1.5f;
+            //    Debug.Log("クリティカル！！");
+            //}
+            ////フラグが立つと回復
+            //if ((_stateFlags.Contains(StateFlag.Heal) || _fool == StateFlag.Heal) && !_stateFlags.Contains(StateFlag.Average))
+            //{
+            //    _playerController.PlayerDamage(-10);
+            //    gDamage = 0f;
+            //}
+            ////フラグが立つとガードアップ
+            //if ((_stateFlags.Contains(StateFlag.GuardUp) || _fool == StateFlag.GuardUp) && !_stateFlags.Contains(StateFlag.Average))
+            //{
+            //    pDamage = pDamage / 2f;
+            //    Debug.Log("ガードアップ！！");
+            //}
+
+            //// フラグの初期化
+            //_stateFlags.Clear();
+            //_fool = StateFlag.Normal;
+
+            //_goblinController.DecreaseEnemyHP(gDamage);
+            //_playerController.PlayerDamage(pDamage);
+            //_selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
+            //_cardMuzzles.ForEach(i => i.SetActive(false));
+            //SelectButton();
+            //GameManager.Instance.EndTurn();
         }
     }
+
 
     void EndTurnUI()
     {
