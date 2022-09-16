@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class UIController : MonoBehaviour
 {
@@ -64,6 +65,7 @@ public class UIController : MonoBehaviour
         _cardMuzzles.ForEach(i => i.SetActive(true));
         _backButton.SetActive(true);
         _selectableCard.enabled = true;
+        EventSystem.current.SetSelectedGameObject(_cardMuzzles[0]);
     }
 
     public void SelectButton()
@@ -72,6 +74,7 @@ public class UIController : MonoBehaviour
         _cardMuzzles.ForEach(i => i.SetActive(false));
         _backButton.SetActive(false);
         _selectableCard.enabled = false;
+        EventSystem.current.SetSelectedGameObject(_selectAndEnd[0]);
     }
 
     void ShuffleCard()
@@ -180,8 +183,8 @@ public class UIController : MonoBehaviour
             //攻撃するキャラクターを選択する場面に移動
             _backButton.SetActive(false);
             _cardMuzzles.ForEach(i => i.SetActive(false));
-            GameObject.FindGameObjectsWithTag("ArrowMark");
-
+            EventSystem.current.SetSelectedGameObject(GameObject.FindGameObjectWithTag("ArrowMark"));
+            
             //float gDamage = _playerController.PlayerAttack;
             //float pDamage = _goblinController.Attack;
             ////ダメージ補正を追加
