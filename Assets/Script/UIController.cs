@@ -247,6 +247,11 @@ public class UIController : MonoBehaviour
         _cardMuzzles.ForEach(i => i.SetActive(false));
     }
 
+    void StageStart()
+    {
+        GameObject.FindGameObjectsWithTag("Ememy");
+    }
+
     enum StateFlag
     {
         Normal,
