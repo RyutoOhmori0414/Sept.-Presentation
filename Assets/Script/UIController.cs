@@ -24,12 +24,13 @@ public class UIController : MonoBehaviour
     [Header("選べるカードの枚数"), SerializeField] int _cards = default;
 
     PlayerController _playerController;
-    GoblinController[] _goblinController;
 
     
     StateFlag _fool = StateFlag.Normal;
     List<StateFlag> _stateFlags = new List<StateFlag>();
 
+    float _gDamage = default;
+    float _pDamage = default;
 
     private void OnEnable()
     {
@@ -47,7 +48,6 @@ public class UIController : MonoBehaviour
         _selectableCard.enabled = false;
 
         _playerController = GameObject.FindObjectOfType<PlayerController>();
-        _goblinController = Array.ConvertAll(_enemies, i => i.GetComponent<GoblinController>());
     }
 
     void BeginTurnUI()
@@ -238,6 +238,62 @@ public class UIController : MonoBehaviour
             //SelectButton();
             //GameManager.Instance.EndTurn();
         }
+    }
+
+    public void PlayerAttack(GoblinController gc)
+    {
+        _gDamage = _playerController.PlayerAttack;
+        _pDamage = gc.Attack;
+        //ダメージ補正を追加
+        //フラグが立つと即死効果を確率で発生
+        if (_fool == StateFlag.InstantDeath || _stateFlags.Contains(StateFlag.InstantDeath))
+        {
+            if (UnityEngine.Random.Range(0, 10) < 5)
+            {
+                _gDamage = 3000f;
+                Debug.Log("即死！！");
+            }
+            else
+            {
+                Debug.Log("即死失敗");
+            }
+        }
+        //フラグが立つと敵と自分のHPが二人の平均になる
+        else if ((_stateFlags.Contains(StateFlag.Average) || _fool == StateFlag.Average))
+        {
+            float av = (_playerController.CurrentPlayerHP + gc.CurrentEnemyHP) / 2;
+            _gDamage = -(_playerController.CurrentPlayerHP - av);
+            _pDamage = -(gc.CurrentEnemyHP - av);
+        }
+        //フラグが立つとダメージアップ
+        else if (_stateFlags.Contains(StateFlag.PowerUp) || _fool == StateFlag.PowerUp)
+        {
+            _gDamage = _gDamage * 1.5f;
+            Debug.Log("クリティカル！！");
+        }
+        //フラグが立つと回復
+        if ((_stateFlags.Contains(StateFlag.Heal) || _fool == StateFlag.Heal) && !_stateFlags.Contains(StateFlag.Average))
+        {
+            _playerController.PlayerDamage(-10);
+            _gDamage = 0f;
+        }
+        //フラグが立つとガードアップ
+        if ((_stateFlags.Contains(StateFlag.GuardUp) || _fool == StateFlag.GuardUp) && !_stateFlags.Contains(StateFlag.Average))
+        {
+            _pDamage = _pDamage / 2f;
+            Debug.Log("ガードアップ！！");
+        }
+
+        // フラグの初期化
+        _stateFlags.Clear();
+        _fool = StateFlag.Normal;
+
+        gc.DecreaseEnemyHP(_gDamage);
+        _playerController.PlayerDamage(_pDamage);
+        _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
+        _cardMuzzles.ForEach(i => i.SetActive(false));
+        SelectButton();
+        GameManager.Instance.EndTurn();
     }
 
 
