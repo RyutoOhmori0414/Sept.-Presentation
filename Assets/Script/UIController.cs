@@ -275,7 +275,6 @@ public class UIController : MonoBehaviour
         if ((_stateFlags.Contains(StateFlag.Heal) || _fool == StateFlag.Heal) && !_stateFlags.Contains(StateFlag.Average))
         {
             _playerController.PlayerDamage(-10);
-            _gDamage = 0f;
         }
         //フラグが立つとガードアップ
         if ((_stateFlags.Contains(StateFlag.GuardUp) || _fool == StateFlag.GuardUp) && !_stateFlags.Contains(StateFlag.Average))

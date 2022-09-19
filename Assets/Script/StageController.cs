@@ -11,17 +11,17 @@ public class StageController : MonoBehaviour
     [Tooltip("BossWave‚Ì“G"), SerializeField]
     GameObject _waveBossEnemies = default;
 
-    void CallWave1()
+    public void CallWave1()
     {
         Instantiate(_wave1Enemies, Vector3.zero, Quaternion.identity);
     }
 
-    void CallWave2()
+    public void CallWave2()
     {
         Instantiate(_wave2Enemies, Vector3.zero, Quaternion.identity);
     }
 
-    void CallWaveBoss()
+    public void CallWaveBoss()
     {
         Instantiate(_waveBossEnemies, Vector3.zero, Quaternion.identity);
     }
