@@ -5148,6 +5148,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187858315}
   m_CullTransparentMesh: 1
+--- !u!1 &256940095
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 256940097}
+  - component: {fileID: 256940096}
+  m_Layer: 0
+  m_Name: Attack_Timeline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!320 &256940096
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256940095}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: e234a58038c07ff449aeb853ac038b66, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -6103753481902297670, guid: e234a58038c07ff449aeb853ac038b66, type: 2}
+    value: {fileID: 0}
+  m_ExposedReferences:
+    m_References: []
+--- !u!4 &256940097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256940095}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &301159432
 GameObject:
   m_ObjectHideFlags: 0
@@ -5915,6 +5966,7 @@ GameObject:
   - component: {fileID: 1016859369}
   - component: {fileID: 1016859370}
   - component: {fileID: 1016859371}
+  - component: {fileID: 1016859372}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6027,6 +6079,24 @@ MonoBehaviour:
   _wave1Enemies: {fileID: 2431325114939747190, guid: 7cb3f172615c18648a7c39501155ed5e, type: 3}
   _wave2Enemies: {fileID: 7971709059896672448, guid: 609a1de90cc55084d98ace7d118996da, type: 3}
   _waveBossEnemies: {fileID: 9090749876913995863, guid: 2001ab3b4562a714398b984fec22c46c, type: 3}
+--- !u!114 &1016859372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1016859366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 911e9cb063513b44c82f72b30d8c3377, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls: []
 --- !u!1 &1075057818
 GameObject:
   m_ObjectHideFlags: 0
