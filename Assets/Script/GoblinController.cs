@@ -11,6 +11,11 @@ public class GoblinController : MonoBehaviour
     [SerializeField] float _hp = default;
     [Tooltip("このエネミーの攻撃力")]
     [SerializeField] float _attack = default;
+    [Tooltip("攻撃を食らった時の通常エフェクト"), SerializeField]
+    GameObject _HitEffect1;
+    [Tooltip("回復時の通常エフェクト"), SerializeField]
+    GameObject _HealEffect1;
+
     public float Attack
     {
         get => _attack;
@@ -45,10 +50,12 @@ public class GoblinController : MonoBehaviour
         if (damage > 0)
         {
             Debug.Log($"Enemyは{damage}ダメージ受けた！！");
+            Instantiate(_HitEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));
         }
         else
         {
             Debug.Log($"Enemyは{-damage}回復した");
+            Instantiate(_HealEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));
         }
         _hpSlider.DOValue(_currentHP / _hp, 0.5f);
         if (_currentHP <= 0)
