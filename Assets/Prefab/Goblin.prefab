@@ -373,6 +373,7 @@ MonoBehaviour:
   _hpSlider: {fileID: 9090749878309796280}
   _hp: 150
   _attack: 20
+  _damageText: {fileID: 1944163008825384163, guid: 0323e652eb9c2d947a5eed2ca5a9988f, type: 3}
   _HitEffect1: {fileID: 4043001222572023059, guid: 385db8822154bb14f87c34c93bf21924, type: 3}
   _HealEffect1: {fileID: 8886606143497570817, guid: 4fcc8fd980b4c0f4eb40b9e49a1a84c7, type: 3}
 --- !u!114 &3920824170266266811
