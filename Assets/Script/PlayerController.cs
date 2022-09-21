@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -43,5 +44,6 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log($"Player‚Í{-damege}‰ñ•œ‚µ‚½");
         }
+        _playerHPSlider.DOValue(_currentPlayerHP / _playerHP, 1f);
     }
 }

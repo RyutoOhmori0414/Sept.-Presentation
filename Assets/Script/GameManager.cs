@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
     StageController _stageController;
     /// <summary>Waveのカウンター</summary>
     int _waveCount;
+    /// <summary>trueになった場合次のWaveを呼ぶ</summary>
+    public bool _callWave = false;
     
     public int TurnCount
     { get => _turnCount; }
@@ -42,6 +44,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        _callWave = false;
         _stageController = GetComponent<StageController>();
         _waveCount = 1;
         _stageController.CallWave1();
@@ -50,19 +53,19 @@ public class GameManager : MonoBehaviour
 
     public void BeginTurn()
     {
-        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && _waveCount == 1)
+        _turnCount++;
+        OnBeginTurn();
+        Debug.Log($"{_turnCount}ターン目開始");
+        if (_callWave && _waveCount == 1)
         {
             _stageController.CallWave2();
             _waveCount++;
         }
-        else if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && _waveCount == 2)
+        else if (_callWave && _waveCount == 2)
         {
             _stageController.CallWaveBoss();
             _waveCount++;
         }
-        _turnCount++;
-        OnBeginTurn();
-        Debug.Log($"{_turnCount}ターン目開始");
     }
 
     public void EndTurn()
