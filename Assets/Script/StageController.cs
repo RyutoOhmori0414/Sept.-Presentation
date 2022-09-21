@@ -14,15 +14,18 @@ public class StageController : MonoBehaviour
     public void CallWave1()
     {
         Instantiate(_wave1Enemies, Vector3.zero, Quaternion.identity);
+        FindObjectOfType<UIController>().WaveStartUIText(1);
     }
 
     public void CallWave2()
     {
         Instantiate(_wave2Enemies, Vector3.zero, Quaternion.identity);
+        FindObjectOfType<UIController>().WaveStartUIText(2);
     }
 
     public void CallWaveBoss()
     {
         Instantiate(_waveBossEnemies, Vector3.zero, Quaternion.identity);
+        FindObjectOfType<UIController>().WaveStartUIText(3);
     }
 }
