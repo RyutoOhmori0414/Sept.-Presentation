@@ -50,12 +50,12 @@ public class GameManager : MonoBehaviour
 
     public void BeginTurn()
     {
-        if (GameObject.FindGameObjectsWithTag("Enemy") == null && _waveCount == 1)
+        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && _waveCount == 1)
         {
             _stageController.CallWave2();
             _waveCount++;
         }
-        if (GameObject.FindGameObjectsWithTag("Enemy") == null&& _waveCount == 2)
+        else if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 && _waveCount == 2)
         {
             _stageController.CallWaveBoss();
             _waveCount++;

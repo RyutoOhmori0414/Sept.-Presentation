@@ -29,7 +29,9 @@ public class UIController : MonoBehaviour
     StateFlag _fool = StateFlag.Normal;
     List<StateFlag> _stateFlags = new List<StateFlag>();
 
+    /// <summary>プレイヤーがエネミーに与えるダメージ</summary>
     float _gDamage = default;
+    /// <summary>エネミーがプレイヤーに与えるダメージ</summary>
     float _pDamage = default;
 
     private void OnEnable()
@@ -275,6 +277,7 @@ public class UIController : MonoBehaviour
         if ((_stateFlags.Contains(StateFlag.Heal) || _fool == StateFlag.Heal) && !_stateFlags.Contains(StateFlag.Average))
         {
             _playerController.PlayerDamage(-10);
+            _pDamage = 0;
         }
         //フラグが立つとガードアップ
         if ((_stateFlags.Contains(StateFlag.GuardUp) || _fool == StateFlag.GuardUp) && !_stateFlags.Contains(StateFlag.Average))
