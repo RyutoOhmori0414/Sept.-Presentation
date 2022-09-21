@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public class GoblinController : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class GoblinController : MonoBehaviour
     [SerializeField] float _hp = default;
     [Tooltip("このエネミーの攻撃力")]
     [SerializeField] float _attack = default;
+    [Tooltip("ダメージを表示するためのTextMesh"), SerializeField]
+    GameObject _damageText;
     [Tooltip("攻撃を食らった時の通常エフェクト"), SerializeField]
     GameObject _HitEffect1;
     [Tooltip("回復時の通常エフェクト"), SerializeField]
@@ -51,11 +54,15 @@ public class GoblinController : MonoBehaviour
         {
             Debug.Log($"Enemyは{damage}ダメージ受けた！！");
             Instantiate(_HitEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));
+            TextMeshPro DText = Instantiate(_damageText, this.transform). GetComponentInChildren<TextMeshPro>();
+            DText.text = damage.ToString();
         }
         else
         {
             Debug.Log($"Enemyは{-damage}回復した");
             Instantiate(_HealEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));
+            TextMeshPro DText = Instantiate(_damageText, this.transform).GetComponentInChildren<TextMeshPro>();
+            DText.text = damage.ToString();
         }
         _hpSlider.DOValue(_currentHP / _hp, 0.5f);
         if (_currentHP <= 0)
