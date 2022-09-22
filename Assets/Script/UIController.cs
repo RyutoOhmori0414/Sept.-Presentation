@@ -8,25 +8,33 @@ using DG.Tweening;
 
 public class UIController : MonoBehaviour
 {
+    [Header("ボタン関係")]
     [Tooltip("カードSelectとエンドボタン")]
     [SerializeField] List<GameObject> _selectAndEnd = new List<GameObject>();
     [Tooltip("カード選択から戻るボタン")]
     [SerializeField] GameObject _backButton;
+
+    [Header("テキスト関係")]
     [Tooltip("あと何枚選べるか表示するテキスト")]
     [SerializeField] Text _selectableCard;
-    [SerializeField] List<GameObject> _cardMuzzles = new List<GameObject>();
-    List<Image> _cardImages = new List<Image>();
-    [Tooltip("カードのスプライト")]
-    [SerializeField] List<Sprite> _cardSprite = new List<Sprite>();
-    [Tooltip("選ばれたカード")]
-    List<GameObject> _selectedCard = new List<GameObject>();
-    [Tooltip("攻撃対象")]
-    [SerializeField] GameObject[] _enemies;
-    [Header("選べるカードの枚数"), SerializeField] int _cards = default;
     [Tooltip("Waveが変わった際に現在のWave数を表示する"), SerializeField]
     GameObject _waveTextgo;
     [Tooltip("選んでいるカードの効果を表示するテキストボックス"), SerializeField]
     GameObject _cardStateTextBox;
+
+    [Header("カード関係")]
+    [Tooltip("カード"), SerializeField]
+    List<GameObject> _cardMuzzles = new List<GameObject>();
+    [Tooltip("カードのアニメーション"), SerializeField]
+    Animator _cardAnim;
+    List<Image> _cardImages = new List<Image>();
+    List<Button> _cardButtons = new List<Button>();
+    [Tooltip("カードのスプライト")]
+    [SerializeField] List<Sprite> _cardSprite = new List<Sprite>();
+    [Tooltip("選ばれたカード")]
+    List<GameObject> _selectedCard = new List<GameObject>();
+    [Header("選べるカードの枚数"), SerializeField] int _cards = default;
+    
     /// <summary>選んでいるカードの効果を表示するテキスト</summary>
     Text _cardStateText;
 
@@ -45,7 +53,7 @@ public class UIController : MonoBehaviour
 
     private void Update()
     {
-        if (_lastSelectedObj != _currentES.currentSelectedGameObject)
+        if (_lastSelectedObj != _currentES.currentSelectedGameObject && _currentES.currentSelectedGameObject)
         {
             OnSelect(_currentES.currentSelectedGameObject);
         }
@@ -60,8 +68,10 @@ public class UIController : MonoBehaviour
     {
         foreach (var card in _cardMuzzles)
         {
-            card.SetActive(false);
             _cardImages.Add(card.GetComponent<Image>());
+            Button cardButton = card.GetComponent<Button>();
+            cardButton.interactable = false;
+            _cardButtons.Add(cardButton);
         }
         ShuffleCard();
         _selectableCard.enabled = false;
@@ -77,6 +87,7 @@ public class UIController : MonoBehaviour
     void BeginTurnUI()
     {
         _selectAndEnd.ForEach(i => i.SetActive(true));
+        _cardMuzzles.ForEach(i => i.SetActive(true));
         ShuffleCard();
         _selectedCard.Clear();
         _selectableCard.text = $"残り{_cards}枚";
@@ -86,7 +97,8 @@ public class UIController : MonoBehaviour
     public void SelectCard()
     {
         _selectAndEnd.ForEach(i => i.SetActive(false));
-        _cardMuzzles.ForEach(i => i.SetActive(true));
+        _cardButtons.ForEach(i => i.interactable = true);
+        _cardAnim.SetBool("ZoomIn", true);
         _backButton.SetActive(true);
         _selectableCard.enabled = true;
         _currentES.SetSelectedGameObject(_cardMuzzles[0]);
@@ -96,7 +108,8 @@ public class UIController : MonoBehaviour
     public void SelectButton()
     {
         _selectAndEnd.ForEach(i => i.SetActive(true));
-        _cardMuzzles.ForEach(i => i.SetActive(false));
+        _cardButtons.ForEach(i => i.interactable = false);
+        _cardAnim.SetBool("ZoomIn", false);
         _backButton.SetActive(false);
         _selectableCard.enabled = false;
         _currentES.SetSelectedGameObject(_selectAndEnd[0]);
@@ -316,7 +329,7 @@ public class UIController : MonoBehaviour
         _fool = StateFlag.Normal;
 
         gc.DecreaseEnemyHP(_gDamage, instanceDeath);
-        _playerController.PlayerDamage(_pDamage);
+        //_playerController.PlayerDamage(_pDamage);
         _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
         _cardMuzzles.ForEach(i => i.SetActive(false));
         SelectButton();
@@ -328,11 +341,6 @@ public class UIController : MonoBehaviour
     {
         _selectAndEnd.ForEach(i => i.SetActive(false));
         _cardMuzzles.ForEach(i => i.SetActive(false));
-    }
-
-    void StageStart()
-    {
-        GameObject.FindGameObjectsWithTag("Ememy");
     }
 
     public void WaveStartUIText(int currentWave)
@@ -353,6 +361,12 @@ public class UIController : MonoBehaviour
         GuardUp,
         Average,
         Heal
+    }
+
+    public void EffectEnd()
+    {
+        _playerController.PlayerDamage(_pDamage);
+        Array.ForEach(GameObject.FindGameObjectsWithTag("Enemy"), i => i.GetComponent<Animator>().Play("EnemyAttack"));
     }
 
     private void OnDisable()

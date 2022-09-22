@@ -20,6 +20,8 @@ public class GoblinController : MonoBehaviour
     GameObject _HealEffect1;
     [Tooltip("即死時のエフェクト"), SerializeField]
     GameObject _instanceDeathEffect1;
+    [Tooltip("エネミーが死んだときのエフェクト"), SerializeField]
+    GameObject _deathEffect;
 
     public float Attack
     {
@@ -51,6 +53,7 @@ public class GoblinController : MonoBehaviour
 
     public void DecreaseEnemyHP(float damage, bool instanteDeath = false)
     {
+        GetComponentInChildren<Button>().interactable = false;
         _currentHP -= damage;
         //初期HPより現在のHPが多くなる時現在のHPを初期HPと同じにする
         if (_currentHP > _hp)
@@ -83,7 +86,10 @@ public class GoblinController : MonoBehaviour
         if (_currentHP <= 0)
         {
             Debug.Log($"{this.gameObject.name}は死にました");
-            GetComponent<SpriteRenderer>().DOFade(0f, 3f).OnComplete(() => Destroy(this.gameObject));
+            
+            Instantiate(_deathEffect, this.transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
+            Destroy(gameObject);
+
         }
     }
 }

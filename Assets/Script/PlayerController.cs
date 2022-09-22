@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-
+using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     [Header("プレイヤーのHP")]
@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     [Header("プレイヤーのHPを表示するスライダー")]
     [SerializeField] Slider _playerHPSlider;
     [Header("プレイヤーの攻撃力"), SerializeField] float _playerAttack = 20f;
+    [Tooltip("カメラを振動させるスクリプト"), SerializeField]
+    CinemachineImpulseSource _playerImpulseSource;
+
     public float PlayerAttack
     {
         get => _playerAttack;
@@ -46,7 +49,7 @@ public class PlayerController : MonoBehaviour
         if (damege > 0)
         {
             Debug.Log($"Playerは{damege}ダメージ受けた");
-            //被弾エフェクト
+            _playerImpulseSource.GenerateImpulse();
         }
         else
         {
