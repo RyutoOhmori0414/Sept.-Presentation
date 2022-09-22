@@ -60,11 +60,13 @@ public class GameManager : MonoBehaviour
         {
             _stageController.CallWave2();
             _waveCount++;
+            _callWave = false;
         }
         else if (_callWave && _waveCount == 2)
         {
             _stageController.CallWaveBoss();
             _waveCount++;
+            _callWave = false;
         }
     }
 

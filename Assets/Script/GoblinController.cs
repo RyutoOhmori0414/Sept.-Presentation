@@ -18,6 +18,8 @@ public class GoblinController : MonoBehaviour
     GameObject _HitEffect1;
     [Tooltip("回復時の通常エフェクト"), SerializeField]
     GameObject _HealEffect1;
+    [Tooltip("即死時のエフェクト"), SerializeField]
+    GameObject _instanceDeathEffect1;
 
     public float Attack
     {
@@ -47,10 +49,23 @@ public class GoblinController : MonoBehaviour
         _playerController = GameObject.FindObjectOfType<PlayerController>();
     }
 
-    public void DecreaseEnemyHP(float damage)
+    public void DecreaseEnemyHP(float damage, bool instanteDeath = false)
     {
         _currentHP -= damage;
-        if (damage > 0)
+        //初期HPより現在のHPが多くなる時現在のHPを初期HPと同じにする
+        if (_currentHP > _hp)
+        {
+            _currentHP = _hp;
+        }
+
+        //ダメージの+-により処理を変える
+        if (instanteDeath)
+        {
+            Debug.Log($"Enemyが即死した");
+            Instantiate(_instanceDeathEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));
+            _currentHP = 0;
+        }
+        else if (damage > 0)
         {
             Debug.Log($"Enemyは{damage}ダメージ受けた！！");
             Instantiate(_HitEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));

@@ -25,10 +25,16 @@ public class UIController : MonoBehaviour
     [Header("選べるカードの枚数"), SerializeField] int _cards = default;
     [Tooltip("Waveが変わった際に現在のWave数を表示する"), SerializeField]
     GameObject _waveTextgo;
+    [Tooltip("選んでいるカードの効果を表示するテキストボックス"), SerializeField]
+    GameObject _cardStateTextBox;
+    /// <summary>選んでいるカードの効果を表示するテキスト</summary>
+    Text _cardStateText;
 
     PlayerController _playerController;
+    EventSystem _currentES = default;
 
-    
+    GameObject _lastSelectedObj;
+
     StateFlag _fool = StateFlag.Normal;
     List<StateFlag> _stateFlags = new List<StateFlag>();
 
@@ -37,6 +43,14 @@ public class UIController : MonoBehaviour
     /// <summary>エネミーがプレイヤーに与えるダメージ</summary>
     float _pDamage = default;
 
+    private void Update()
+    {
+        if (_lastSelectedObj != _currentES.currentSelectedGameObject)
+        {
+            OnSelect(_currentES.currentSelectedGameObject);
+        }
+        _lastSelectedObj = _currentES.currentSelectedGameObject;
+    }
     private void OnEnable()
     {
         GameManager.Instance.OnBeginTurn += BeginTurnUI;
@@ -52,7 +66,12 @@ public class UIController : MonoBehaviour
         ShuffleCard();
         _selectableCard.enabled = false;
 
+        _currentES = EventSystem.current;
+
+        _cardStateTextBox.SetActive(false);
+
         _playerController = GameObject.FindObjectOfType<PlayerController>();
+        _cardStateText = _cardStateTextBox.GetComponentInChildren<Text>();
     }
 
     void BeginTurnUI()
@@ -70,7 +89,8 @@ public class UIController : MonoBehaviour
         _cardMuzzles.ForEach(i => i.SetActive(true));
         _backButton.SetActive(true);
         _selectableCard.enabled = true;
-        EventSystem.current.SetSelectedGameObject(_cardMuzzles[0]);
+        _currentES.SetSelectedGameObject(_cardMuzzles[0]);
+        _cardStateTextBox.SetActive(true);
     }
 
     public void SelectButton()
@@ -79,7 +99,8 @@ public class UIController : MonoBehaviour
         _cardMuzzles.ForEach(i => i.SetActive(false));
         _backButton.SetActive(false);
         _selectableCard.enabled = false;
-        EventSystem.current.SetSelectedGameObject(_selectAndEnd[0]);
+        _currentES.SetSelectedGameObject(_selectAndEnd[0]);
+        _cardStateTextBox.SetActive(false);
     }
 
     void ShuffleCard()
@@ -93,6 +114,53 @@ public class UIController : MonoBehaviour
             copySprite.RemoveAt(RSpriteIndex);
         }
     }
+    public void OnTestSelected(BaseEventData eventData)
+    {
+        Debug.Log("Test動いた");
+        Debug.Log(eventData.selectedObject.name);
+    }
+
+    //カードをSelectしている際にSelectしているカードの効果を出力する
+    public void OnSelect(GameObject sgameObject)
+    {
+        if (sgameObject.CompareTag("Card"))
+        {
+            string selectedSpriteName = sgameObject.GetComponent<Image>().sprite.name;
+
+            if (selectedSpriteName.Contains("死神") || selectedSpriteName.Contains("吊るされた男"))
+            {
+                _cardStateText.text = "確率で即死効果が付与される";
+            }
+            else if (selectedSpriteName.Contains("力"))
+            {
+                _cardStateText.text = "自身の攻撃力が一時的に上昇する！";
+            }
+            else if (selectedSpriteName.Contains("戦車"))
+            {
+                _cardStateText.text = "自身の防御力が一時的に上昇する！";
+            }
+            else if (selectedSpriteName.Contains("節制"))
+            {
+                _cardStateText.text = "攻撃対象と、自分のHPを等しく配分しなおす";
+            }
+            else if (selectedSpriteName.Contains("女帝"))
+            {
+                _cardStateText.text = "自身の攻撃に回復効果が付与される";
+            }
+            else if (selectedSpriteName.Contains("愚者"))
+            {
+                _cardStateText.text = "ランダムで追加効果が発生する";
+            }
+            else
+            {
+                _cardStateText.text = "特になし";
+            }
+        }
+        else
+        {
+            _cardStateText.text = "";
+        }
+    }
 
     public void ButtonGetGameObject(GameObject go)
     {
@@ -103,7 +171,7 @@ public class UIController : MonoBehaviour
             image.color = Color.gray;
 
             //特殊効果があるカードが選ばれた際フラグを立てる
-            if (image.sprite.name.Contains("死神") || image.sprite.name.Contains("死"))
+            if (image.sprite.name.Contains("死神") || image.sprite.name.Contains("吊るされた男"))
             {
                 _stateFlags.Add(StateFlag.InstantDeath);
             }
@@ -186,9 +254,15 @@ public class UIController : MonoBehaviour
         if (_selectedCard.Count + 1 > _cards)
         {
             //攻撃するキャラクターを選択する場面に移動
+            _cardStateTextBox.SetActive(false);
             _backButton.SetActive(false);
             _cardMuzzles.ForEach(i => i.SetActive(false));
-            EventSystem.current.SetSelectedGameObject(GameObject.FindGameObjectWithTag("ArrowMark"));
+
+            //直接選べないようにする
+            var enemyTargets = GameObject.FindGameObjectsWithTag("ArrowMark");
+            Array.ForEach(Array.ConvertAll(enemyTargets, i => i.GetComponent<Button>()), i => i.interactable = true);
+                
+            _currentES.SetSelectedGameObject(enemyTargets[0]);
         }
     }
 
@@ -196,13 +270,14 @@ public class UIController : MonoBehaviour
     {
         _gDamage = _playerController.PlayerAttack;
         _pDamage = gc.Attack;
+        bool instanceDeath = false;
         //ダメージ補正を追加
         //フラグが立つと即死効果を確率で発生
         if (_fool == StateFlag.InstantDeath || _stateFlags.Contains(StateFlag.InstantDeath))
         {
             if (UnityEngine.Random.Range(0, 10) < 5)
             {
-                _gDamage = 3000f;
+                instanceDeath = true;
                 Debug.Log("即死！！");
             }
             else
@@ -240,7 +315,7 @@ public class UIController : MonoBehaviour
         _stateFlags.Clear();
         _fool = StateFlag.Normal;
 
-        gc.DecreaseEnemyHP(_gDamage);
+        gc.DecreaseEnemyHP(_gDamage, instanceDeath);
         _playerController.PlayerDamage(_pDamage);
         _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
         _cardMuzzles.ForEach(i => i.SetActive(false));

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - ArrowMark
+  - Card
   layers:
   - Default
   - TransparentFX
