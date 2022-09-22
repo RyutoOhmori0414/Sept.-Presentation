@@ -283,6 +283,7 @@ GameObject:
   - component: {fileID: 9090749876913995856}
   - component: {fileID: 9090749876913995858}
   - component: {fileID: 3920824170266266811}
+  - component: {fileID: 7948102852582235226}
   m_Layer: 0
   m_Name: Goblin
   m_TagString: Enemy
@@ -300,7 +301,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 9090749876814514007}
   m_Father: {fileID: 0}
@@ -377,6 +378,7 @@ MonoBehaviour:
   _HitEffect1: {fileID: 4043001222572023059, guid: 385db8822154bb14f87c34c93bf21924, type: 3}
   _HealEffect1: {fileID: 8886606143497570817, guid: 4fcc8fd980b4c0f4eb40b9e49a1a84c7, type: 3}
   _instanceDeathEffect1: {fileID: 8320487370713186197, guid: 390d33387e81d8c4c93e9f7f5385fba5, type: 3}
+  _deathEffect: {fileID: 6586093595800764602, guid: 76dad687d9657c048834a69763bd6a9d, type: 3}
 --- !u!114 &3920824170266266811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,6 +391,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c13ae4f352689e459bdc90940efe0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &7948102852582235226
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9090749876913995863}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 881d207b10793114f8985072aa07d984, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &9090749876928237960
 GameObject:
   m_ObjectHideFlags: 0
