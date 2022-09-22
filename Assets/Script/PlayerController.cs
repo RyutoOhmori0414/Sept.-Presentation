@@ -36,13 +36,22 @@ public class PlayerController : MonoBehaviour
     public void PlayerDamage(float damege)
     {
         _currentPlayerHP -= damege;
+        //もしHPが初期HPより大きくなったらHPに初期HPを代入する
+        if (_currentPlayerHP > _playerHP)
+        {
+            _currentPlayerHP = _playerHP;
+        }
+
+        //エフェクトをダメージによって変更する処理
         if (damege > 0)
         {
             Debug.Log($"Playerは{damege}ダメージ受けた");
+            //被弾エフェクト
         }
         else
         {
             Debug.Log($"Playerは{-damege}回復した");
+            //回復エフェクト
         }
         _playerHPSlider.DOValue(_currentPlayerHP / _playerHP, 1f);
     }
