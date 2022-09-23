@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GoblinController : MonoBehaviour
 {
+    [Header("boss"), SerializeField]
+    bool _bossMode = false;
     [SerializeField] Slider _hpSlider;
     [Tooltip("このエネミーのhp")]
     [SerializeField] float _hp = default;
@@ -89,6 +92,11 @@ public class GoblinController : MonoBehaviour
             
             Instantiate(_deathEffect, this.transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
             Destroy(gameObject);
+
+            if (_bossMode)
+            {
+                //シーン遷移などいろいろ書く
+            }
 
         }
     }
