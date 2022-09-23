@@ -34,6 +34,10 @@ public class UIController : MonoBehaviour
     [Tooltip("選ばれたカード")]
     List<GameObject> _selectedCard = new List<GameObject>();
     [Header("選べるカードの枚数"), SerializeField] int _cards = default;
+
+    [Header("その他")]
+    [Tooltip("フェードに使うパネル"), SerializeField]
+    GameObject _fadePanel;
     
     /// <summary>選んでいるカードの効果を表示するテキスト</summary>
     Text _cardStateText;
@@ -367,6 +371,16 @@ public class UIController : MonoBehaviour
     {
         _playerController.PlayerDamage(_pDamage);
         Array.ForEach(GameObject.FindGameObjectsWithTag("Enemy"), i => i.GetComponent<Animator>().Play("EnemyAttack"));
+    }
+
+    /// <summary>fadeで使える関数</summary>
+    public void Fade(float fadeEndValue, Color panelColor, TweenCallback fadeOnComplete = null)
+    {
+        fadeOnComplete += () => _fadePanel.SetActive(false);
+        _fadePanel.SetActive(true);
+        Image fadeImage = _fadePanel.GetComponent<Image>();
+        fadeImage.color = panelColor;
+        fadeImage.DOFade(fadeEndValue, 1).OnComplete(fadeOnComplete);
     }
 
     private void OnDisable()

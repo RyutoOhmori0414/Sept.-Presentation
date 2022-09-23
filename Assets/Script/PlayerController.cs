@@ -57,5 +57,10 @@ public class PlayerController : MonoBehaviour
             //回復エフェクト
         }
         _playerHPSlider.DOValue(_currentPlayerHP / _playerHP, 1f);
+
+        if (_currentPlayerHP < 0)
+        {
+            GetComponent<UIController>().Fade(1f, new Color (1f, 0f, 0f, 0f));
+        }
     }
 }
