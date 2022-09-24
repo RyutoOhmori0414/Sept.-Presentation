@@ -49,7 +49,6 @@ public class GameManager : MonoBehaviour
         _waveCount = 1;
         _stageController.CallWave1();
         GetComponent<UIController>().Fade(0f, Color.black, () => BeginTurn());
-        BeginTurn();
     }
 
     public void BeginTurn()

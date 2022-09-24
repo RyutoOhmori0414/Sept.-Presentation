@@ -479,7 +479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f53f0d7543e80d40806cd1fe5431115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hpSlider: {fileID: 0}
+  _bossMode: 0
+  _hpSlider: {fileID: 9090749878309796280}
   _hp: 300
   _attack: 40
   _damageText: {fileID: 1944163008825384163, guid: 0323e652eb9c2d947a5eed2ca5a9988f, type: 3}

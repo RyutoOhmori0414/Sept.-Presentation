@@ -369,8 +369,11 @@ public class UIController : MonoBehaviour
 
     public void EffectEnd()
     {
-        _playerController.PlayerDamage(_pDamage);
-        Array.ForEach(GameObject.FindGameObjectsWithTag("Enemy"), i => i.GetComponent<Animator>().Play("EnemyAttack"));
+        if (GameObject.FindGameObjectWithTag("Enemy"))
+        {
+            _playerController.PlayerDamage(_pDamage);
+            Array.ForEach(GameObject.FindGameObjectsWithTag("Enemy"), i => i.GetComponent<Animator>().Play("EnemyAttack"));
+        }
     }
 
     /// <summary>fade‚Åg‚¦‚éŠÖ”</summary>
