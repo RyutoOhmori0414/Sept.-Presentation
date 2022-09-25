@@ -13,15 +13,16 @@ public class TitleAudioController : MonoBehaviour
     [Tooltip("Œˆ’è‰¹"), SerializeField]
     AudioClip _selectSE;
 
-    public void ChooseSEPlay()
+    public void ChooseSEPlay(bool choose = false)
     {
-        _seAudioSource.clip = _chooseSE;
-        _seAudioSource.Play();
-    }
-
-    public void SelectSEPlay()
-    {
-        _seAudioSource.clip = _selectSE;
+        if (choose)
+        {
+            _seAudioSource.clip = _chooseSE;
+        }
+        else
+        {
+            _seAudioSource.clip = _selectSE;
+        }
         _seAudioSource.Play();
     }
 }

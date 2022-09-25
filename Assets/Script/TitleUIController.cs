@@ -36,7 +36,7 @@ public class TitleUIController : MonoBehaviour
         }
         else if (_lastSelectedObj != EventSystem.current.currentSelectedGameObject)
         {
-            _audioController.ChooseSEPlay();
+            _audioController.ChooseSEPlay(true);
             _lastSelectedObj = EventSystem.current.currentSelectedGameObject;
         }
     }
