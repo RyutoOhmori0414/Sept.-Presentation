@@ -5,28 +5,25 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager _instance;
-    public static GameManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = (GameManager)FindObjectOfType(typeof(GameManager));
-                if (_instance == null)
-                {
-                    Debug.LogError("GameManagerをアタッチしているGameObjectがありません");
-                }
-            }
-            return _instance;
-        }
-    }
     /// <summary>ターンが始まったときに行う</summary>
     public event Action OnBeginTurn;
     /// <summary>ターンが終わったときに行う</summary>
     public event Action OnEndTurn;
     /// <summary>ターンのカウント</summary>
-    int _turnCount = 0;
+    static int _turnCount = 0;
+    /// <summary>経過したターン数</summary>
+    public static int TurnCount
+    {
+        get => _turnCount;
+    }
+    /// <summary>与えたダメージの合計</summary>
+    static float _totalDamage;
+    /// <summary>与えたダメージの合計</summary>
+    public static float TotalDamage
+    {
+        get => _totalDamage;
+        set => _totalDamage = value;
+    }
     /// <summary>ステージコントローラ</summary>
     StageController _stageController;
     /// <summary>Waveのカウンター</summary>
@@ -34,16 +31,10 @@ public class GameManager : MonoBehaviour
     /// <summary>trueになった場合次のWaveを呼ぶ</summary>
     public bool _callWave = false;
     
-    public int TurnCount
-    { get => _turnCount; }
-
-    private void Awake()
-    {
-        CheckInstance();
-    }
 
     private void Start()
     {
+        _totalDamage = 0;
         _callWave = false;
         _stageController = GetComponent<StageController>();
         _waveCount = 1;
@@ -75,17 +66,5 @@ public class GameManager : MonoBehaviour
         OnEndTurn();
         Debug.Log($"{_turnCount}ターン目終了");
         Invoke("BeginTurn", 3f);
-    }
-    
-    void CheckInstance()
-    {
-        if (_instance == null)
-        {
-            _instance = this as GameManager;
-        }
-        else if (_instance != this)
-        {
-            Destroy(this);
-        }
     }
 }

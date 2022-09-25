@@ -43,6 +43,7 @@ public class UIController : MonoBehaviour
     Text _cardStateText;
 
     PlayerController _playerController;
+    GameManager _gameManager;
     EventSystem _currentES = default;
 
     GameObject _lastSelectedObj;
@@ -57,16 +58,21 @@ public class UIController : MonoBehaviour
 
     private void Update()
     {
-        if (_lastSelectedObj != _currentES.currentSelectedGameObject && _currentES.currentSelectedGameObject)
+        if (!_currentES.currentSelectedGameObject)
+        {
+            _currentES.SetSelectedGameObject(_lastSelectedObj);
+        }
+        else if (_lastSelectedObj != _currentES.currentSelectedGameObject)
         {
             OnSelect(_currentES.currentSelectedGameObject);
+            _lastSelectedObj = _currentES.currentSelectedGameObject;
         }
-        _lastSelectedObj = _currentES.currentSelectedGameObject;
     }
     private void OnEnable()
     {
-        GameManager.Instance.OnBeginTurn += BeginTurnUI;
-        GameManager.Instance.OnEndTurn += EndTurnUI;
+        _gameManager = GetComponent<GameManager>();
+        _gameManager.OnBeginTurn += BeginTurnUI;
+        _gameManager.OnEndTurn += EndTurnUI;
     }
     private void Start()
     {
@@ -148,7 +154,7 @@ public class UIController : MonoBehaviour
             {
                 _cardStateText.text = "確率で即死効果が付与される";
             }
-            else if (selectedSpriteName.Contains("力"))
+            else if (selectedSpriteName.Contains("魔術師") || selectedSpriteName.Contains("力"))
             {
                 _cardStateText.text = "自身の攻撃力が一時的に上昇する！";
             }
@@ -160,14 +166,35 @@ public class UIController : MonoBehaviour
             {
                 _cardStateText.text = "攻撃対象と、自分のHPを等しく配分しなおす";
             }
-            else if (selectedSpriteName.Contains("女帝"))
+            else if (selectedSpriteName.Contains("女帝") || selectedSpriteName.Contains("恋人"))
             {
                 _cardStateText.text = "自身の攻撃に回復効果が付与される";
             }
-            else if (selectedSpriteName.Contains("愚者"))
+            else if (selectedSpriteName.Contains("_教皇"))
+            {
+                _cardStateText.text = "体力を全回復";
+            }
+            else if (selectedSpriteName.Contains("女教皇"))
+            {
+                _cardStateText.text = "体力上限アップ";
+            }
+            else if (selectedSpriteName.Contains("愚者") || selectedSpriteName.Contains("運命の輪"))
             {
                 _cardStateText.text = "ランダムで追加効果が発生する";
             }
+            else if (selectedSpriteName.Contains("塔"))
+            {
+                _cardStateText.text = "体力が減る代わりに強力な攻撃";
+            }
+            else if (selectedSpriteName.Contains("正義"))
+            {
+                _cardStateText.text = "1ターン無敵になる";
+            }
+            else if (selectedSpriteName.Contains("隠者"))
+            {
+                _cardStateText.text = "ランダムで1ターン無敵になる";
+            }
+            
             else
             {
                 _cardStateText.text = "特になし";
@@ -192,9 +219,13 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Add(StateFlag.InstantDeath);
             }
-            else if (image.sprite.name.Contains("力"))
+            else if (image.sprite.name.Contains("魔術師") || image.sprite.name.Contains("力"))
             {
                 _stateFlags.Add(StateFlag.PowerUp);
+            }
+            else if (image.sprite.name.Contains("女教皇"))
+            {
+                _stateFlags.Add(StateFlag.HPUp);
             }
             else if (image.sprite.name.Contains("戦車"))
             {
@@ -204,11 +235,15 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Add(StateFlag.Average);
             }
-            else if (image.sprite.name.Contains("女帝"))
+            else if (image.sprite.name.Contains("女帝") || image.sprite.name.Contains("恋人"))
             {
                 _stateFlags.Add(StateFlag.Heal);
             }
-            else if (image.sprite.name.Contains("愚者"))
+            else if (image.sprite.name.Contains("_教皇"))
+            {
+                _stateFlags.Add(StateFlag.PowerHeal);
+            }
+            else if (image.sprite.name.Contains("愚者") || image.sprite.name.Contains("運命の輪"))
             {
                 int randomValue = UnityEngine.Random.Range(0, 5);
                 if (randomValue == 0)
@@ -232,6 +267,18 @@ public class UIController : MonoBehaviour
                     _fool = StateFlag.Heal;
                 }
             }
+            else if (image.sprite.name.Contains("塔"))
+            {
+                _stateFlags.Add(StateFlag.RiskyAttack);
+            }
+            else if (image.sprite.name.Contains("正義"))
+            {
+                _stateFlags.Add(StateFlag.ParfectGuard);
+            }
+            else if (image.sprite.name.Contains("隠者"))
+            {
+                _stateFlags.Add(StateFlag.RandomGuard);
+            }
         }
         else
         {
@@ -240,13 +287,17 @@ public class UIController : MonoBehaviour
             image.color = Color.white;
 
             //特殊効果があるカードの選択が解除された際フラグも取り消す
-            if (image.sprite.name.Contains("死神") || image.sprite.name.Contains("死"))
+            if (image.sprite.name.Contains("死神") || image.sprite.name.Contains("吊るされた男"))
             {
                 _stateFlags.Remove(StateFlag.InstantDeath);
             }
-            else if (image.sprite.name.Contains("力"))
+            else if (image.sprite.name.Contains("魔術師") || image.sprite.name.Contains("力"))
             {
                 _stateFlags.Remove(StateFlag.PowerUp);
+            }
+            else if (image.sprite.name.Contains("女教皇"))
+            {
+                _stateFlags.Remove(StateFlag.HPUp);
             }
             else if (image.sprite.name.Contains("戦車"))
             {
@@ -256,13 +307,29 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Remove(StateFlag.Average);
             }
-            else if (image.sprite.name.Contains("女帝"))
+            else if (image.sprite.name.Contains("女帝") || image.sprite.name.Contains("恋人"))
             {
                 _stateFlags.Remove(StateFlag.Heal);
             }
-            else if (image.sprite.name.Contains("愚者"))
+            else if (image.sprite.name.Contains("_教皇"))
+            {
+                _stateFlags.Remove(StateFlag.PowerHeal);
+            }
+            else if (image.sprite.name.Contains("愚者") || image.sprite.name.Contains("運命の輪"))
             {
                 _fool = StateFlag.Normal;
+            }
+            else if (image.sprite.name.Contains("塔"))
+            {
+                _stateFlags.Remove(StateFlag.RiskyAttack);
+            }
+            else if (image.sprite.name.Contains("正義"))
+            {
+                _stateFlags.Remove(StateFlag.ParfectGuard);
+            }
+            else if (image.sprite.name.Contains("隠者"))
+            {
+                _stateFlags.Remove(StateFlag.RandomGuard);
             }
         }
 
@@ -306,8 +373,14 @@ public class UIController : MonoBehaviour
         else if ((_stateFlags.Contains(StateFlag.Average) || _fool == StateFlag.Average))
         {
             float av = (_playerController.CurrentPlayerHP + gc.CurrentEnemyHP) / 2;
-            _gDamage = -(_playerController.CurrentPlayerHP - av);
-            _pDamage = -(gc.CurrentEnemyHP - av);
+            _gDamage = (_playerController.CurrentPlayerHP - av) * -1f;
+            _playerController.NoEffectHPChange((gc.CurrentEnemyHP - av) * -1f);
+        }
+        //フラグが立つとダメージを受けるが攻撃力が超アップ
+        else if (_stateFlags.Contains(StateFlag.RiskyAttack) || _fool == StateFlag.RiskyAttack)
+        {
+            _playerController.NoEffectHPChange(40);
+            _gDamage = _gDamage * 4;
         }
         //フラグが立つとダメージアップ
         else if (_stateFlags.Contains(StateFlag.PowerUp) || _fool == StateFlag.PowerUp)
@@ -315,19 +388,41 @@ public class UIController : MonoBehaviour
             _gDamage = _gDamage * 1.5f;
             Debug.Log("クリティカル！！");
         }
-        //フラグが立つと回復
-        if ((_stateFlags.Contains(StateFlag.Heal) || _fool == StateFlag.Heal) && !_stateFlags.Contains(StateFlag.Average))
+        //フラグが立つとHPアップ
+        if ((_stateFlags.Contains(StateFlag.HPUp) || _fool == StateFlag.HPUp))
         {
-            _playerController.PlayerDamage(-10);
+            _playerController.PlayerHPUp(20f);
+        }
+        //全回復
+        if ((_stateFlags.Contains(StateFlag.PowerHeal) || _fool == StateFlag.PowerHeal))
+        {
+            _playerController.NoEffectHPChange(-10000);
+            Debug.Log("全回復");
+        }
+        //フラグが立つと回復
+        else if ((_stateFlags.Contains(StateFlag.Heal) || _fool == StateFlag.Heal) && !_stateFlags.Contains(StateFlag.Average))
+        {
+            _playerController.NoEffectHPChange(-40);
+        }
+        //無敵
+        if (_stateFlags.Contains(StateFlag.ParfectGuard) || _fool == StateFlag.ParfectGuard)
+        {
             _pDamage = 0;
         }
         //フラグが立つとガードアップ
-        if ((_stateFlags.Contains(StateFlag.GuardUp) || _fool == StateFlag.GuardUp) && !_stateFlags.Contains(StateFlag.Average))
+        else if ((_stateFlags.Contains(StateFlag.GuardUp) || _fool == StateFlag.GuardUp) && !_stateFlags.Contains(StateFlag.Average))
         {
             _pDamage = _pDamage / 2f;
             Debug.Log("ガードアップ！！");
         }
-
+        if (_stateFlags.Contains(StateFlag.RandomGuard) || _fool == StateFlag.RandomGuard)
+        {
+            if (UnityEngine.Random.Range(0, 2) == 0)
+            {
+                _pDamage = 0;
+                Debug.Log("guard成功");
+            }
+        }
         // フラグの初期化
         _stateFlags.Clear();
         _fool = StateFlag.Normal;
@@ -337,7 +432,7 @@ public class UIController : MonoBehaviour
         _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
         _cardMuzzles.ForEach(i => i.SetActive(false));
         SelectButton();
-        GameManager.Instance.EndTurn();
+        _gameManager.EndTurn();
     }
 
 
@@ -364,7 +459,13 @@ public class UIController : MonoBehaviour
         PowerUp,
         GuardUp,
         Average,
-        Heal
+        Heal,
+        RiskyAttack,
+        ParfectGuard,
+        HPUp,
+        PowerHeal,
+        RandomGuard,
+        SelfHarm,
     }
 
     public void EffectEnd()
@@ -388,7 +489,7 @@ public class UIController : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.Instance.OnBeginTurn -= BeginTurnUI;
-        GameManager.Instance.OnEndTurn -= EndTurnUI;
+        _gameManager.OnBeginTurn -= BeginTurnUI;
+        _gameManager.OnEndTurn -= EndTurnUI;
     }
 }

@@ -4,32 +4,32 @@ using UnityEngine;
 
 public class WavePrefabController : MonoBehaviour
 {
-    /// <summary>現在のエネミーの数</summary>
-    int _enemyCount = default;
+    GameManager _gameManager;
+    private void Update()
+    {
+        if (transform.childCount <= 0)
+        {
+            EnemyEffectController.NoEnemyAttack = true;
+        }
+    }
 
     private void OnEnable()
     {
-        GameManager.Instance.OnBeginTurn += GetWaveChildCount;
-    }
-
-    private void Start()
-    {
-        _enemyCount = transform.childCount;
-
+        _gameManager = FindObjectOfType<GameManager>();
+        _gameManager.OnBeginTurn += GetWaveChildCount;
     }
 
     public void GetWaveChildCount()
     {
-        _enemyCount = transform.childCount;
-        if (_enemyCount <= 0)
+        if (transform.childCount <= 0)
         {
-            GameManager.Instance._callWave = true;
+            _gameManager._callWave = true;
             Destroy(gameObject);
         }
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnBeginTurn -= GetWaveChildCount;
+        _gameManager.OnBeginTurn -= GetWaveChildCount;
     }
 }

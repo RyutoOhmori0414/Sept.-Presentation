@@ -479,7 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f53f0d7543e80d40806cd1fe5431115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bossMode: 0
+  _bossMode: 1
   _hpSlider: {fileID: 9090749878309796280}
   _hp: 300
   _attack: 40

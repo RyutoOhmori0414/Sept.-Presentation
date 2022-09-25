@@ -36,6 +36,22 @@ public class PlayerController : MonoBehaviour
         _playerHPSlider.value = _currentPlayerHP / _playerHP;
     }
 
+    public void PlayerHPUp(float upHP)
+    {
+        _playerHP += upHP;
+        _playerHPSlider.DOValue(_currentPlayerHP / _playerHP, 1f);
+    }
+
+    public void NoEffectHPChange(float damage)
+    {
+        _currentPlayerHP -= damage;
+        if (_currentPlayerHP > _playerHP)
+        {
+            _currentPlayerHP = _playerHP;
+        }
+        _playerHPSlider.DOValue(_currentPlayerHP / _playerHP, 1f);
+    }
+
     public void PlayerDamage(float damege)
     {
         _currentPlayerHP -= damege;

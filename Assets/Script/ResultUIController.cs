@@ -24,7 +24,11 @@ public class ResultUIController : MonoBehaviour
 
     private void Start()
     {
-        float testWave = 6969696;
+        //スコアを算出するためにいろいろ取ってくる
+        float wave = GameManager.TurnCount;
+        float totalDamage = GameManager.TotalDamage;
+        //スコア算出
+        float score = (wave > 30 ? 0 : 30 - wave) * 1000 + totalDamage * 100;
 
         //フェードさせてActiveをfalseにしてる
         _fadeImage = _fadePanel.GetComponent<Image>();
@@ -32,19 +36,19 @@ public class ResultUIController : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Append(_fadeImage.DOFade(0f, 1f).OnComplete(() => _fadePanel.SetActive(false)));
         //フェードさせたらスコアを表示させる
-        seq.Append(_scoreTexts[0].DOText(testWave.ToString("0000000"), 2f, scrambleMode: ScrambleMode.Numerals));
+        seq.Append(_scoreTexts[0].DOText(wave.ToString("0000000"), 2f, scrambleMode: ScrambleMode.Numerals));
         //スコアにより評価を変える
         seq.AppendCallback(() =>
         {
-            if (30 < testWave)
+            if (30 < wave)
             {
                 _scoreImage[0].sprite = _scoreSprites[3];
             }
-            else if (20 < testWave)
+            else if (20 < wave)
             {
                 _scoreImage[0].sprite = _scoreSprites[2];
             }
-            else if (10 < testWave)
+            else if (10 < wave)
             {
                 _scoreImage[0].sprite = _scoreSprites[1];
             }
@@ -56,19 +60,19 @@ public class ResultUIController : MonoBehaviour
         //評価をフェードさせる
         seq.Append(_scoreImage[0].DOFade(1f, 2f));
         //フェードさせたらスコアを表示させる
-        seq.Append(_scoreTexts[1].DOText(testWave.ToString("0000000"), 2f, scrambleMode: ScrambleMode.Numerals));
+        seq.Append(_scoreTexts[1].DOText(totalDamage.ToString("0000000"), 2f, scrambleMode: ScrambleMode.Numerals));
         //スコアにより評価を変える
         seq.AppendCallback(() =>
         {
-            if (30 < testWave)
+            if (1000 > totalDamage)
             {
                 _scoreImage[1].sprite = _scoreSprites[3];
             }
-            else if (20 < testWave)
+            else if (2000 > totalDamage)
             {
                 _scoreImage[1].sprite = _scoreSprites[2];
             }
-            else if (10 < testWave)
+            else if (3000 > totalDamage)
             {
                 _scoreImage[1].sprite = _scoreSprites[1];
             }
@@ -80,19 +84,19 @@ public class ResultUIController : MonoBehaviour
         //評価をフェードさせる
         seq.Append(_scoreImage[1].DOFade(1f, 2f));
         //フェードさせたらスコアを表示させる
-        seq.Append(_scoreTexts[2].DOText(testWave.ToString("0000000"), 2f, scrambleMode: ScrambleMode.Numerals));
+        seq.Append(_scoreTexts[2].DOText(score.ToString("0000000"), 2f, scrambleMode: ScrambleMode.Numerals));
         //スコアにより評価を変える
         seq.AppendCallback(() =>
         {
-            if (30 < testWave)
+            if (20000 > score)
             {
                 _scoreImage[2].sprite = _scoreSprites[3];
             }
-            else if (20 < testWave)
+            else if (20000 > score)
             {
                 _scoreImage[2].sprite = _scoreSprites[2];
             }
-            else if (10 < testWave)
+            else if (30000 > score)
             {
                 _scoreImage[2].sprite = _scoreSprites[1];
             }
