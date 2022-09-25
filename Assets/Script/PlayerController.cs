@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Cinemachine;
 public class PlayerController : MonoBehaviour
@@ -13,6 +15,14 @@ public class PlayerController : MonoBehaviour
     [Header("プレイヤーの攻撃力"), SerializeField] float _playerAttack = 20f;
     [Tooltip("カメラを振動させるスクリプト"), SerializeField]
     CinemachineImpulseSource _playerImpulseSource;
+
+    [Header("GameOver時に表示するUI")]
+    [Tooltip("赤いパネル"), SerializeField]
+    GameObject _redPanel;
+    [Tooltip("GameOverのロゴ"), SerializeField]
+    GameObject _imageLogo;
+    [Tooltip("タイトルに戻るためのButton"), SerializeField]
+    GameObject _toTitleButton;
 
     public float PlayerAttack
     {
@@ -76,7 +86,21 @@ public class PlayerController : MonoBehaviour
 
         if (_currentPlayerHP < 0)
         {
-            GetComponent<UIController>().Fade(1f, new Color (1f, 0f, 0f, 0f));
+            GetComponent<UIController>().Fade(1f, new Color (1f, 0f, 0f, 0f),() => 
+            {
+                _redPanel.SetActive(true);
+                _imageLogo.SetActive(true);
+                _imageLogo.GetComponent<Image>().DOFade(1f, 1f).OnComplete(() =>
+                {
+                    _toTitleButton.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(_toTitleButton);
+                });
+            });
         }
+    }
+
+    public void ToTitle()
+    {
+        SceneManager.LoadScene("TitleScene");
     }
 }
