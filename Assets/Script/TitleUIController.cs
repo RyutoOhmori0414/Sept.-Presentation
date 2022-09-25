@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 
@@ -23,6 +24,19 @@ public class TitleUIController : MonoBehaviour
     //[Tooltip("İ’è‚É•\¦‚³‚ê‚éPanel")]
     //GameObject _settingPanel;
 
+    GameObject _lastSelectedObj;
+
+    private void Update()
+    {
+        if (!EventSystem.current.currentSelectedGameObject)
+        {
+            EventSystem.current.SetSelectedGameObject(_lastSelectedObj);
+        }
+        else if (_lastSelectedObj != EventSystem.current.currentSelectedGameObject)
+        {
+            _lastSelectedObj = EventSystem.current.currentSelectedGameObject;
+        }
+    }
     public void ButtonUsable(bool isUsed)
     {
         Array.ForEach(_nomalButton, i => i.interactable = isUsed);

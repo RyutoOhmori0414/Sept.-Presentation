@@ -154,7 +154,7 @@ public class UIController : MonoBehaviour
             {
                 _cardStateText.text = "Šm—¦‚Å‘¦€Œø‰Ê‚ª•t—^‚³‚ê‚é";
             }
-            else if (selectedSpriteName.Contains("–‚pt") || selectedSpriteName.Contains("—Í"))
+            else if (selectedSpriteName.Contains("–‚pt") || selectedSpriteName.Contains("—Í") || selectedSpriteName.Contains("c’é"))
             {
                 _cardStateText.text = "©g‚ÌUŒ‚—Í‚ªˆê“I‚Éã¸‚·‚éI";
             }
@@ -162,7 +162,7 @@ public class UIController : MonoBehaviour
             {
                 _cardStateText.text = "©g‚Ì–hŒä—Í‚ªˆê“I‚Éã¸‚·‚éI";
             }
-            else if (selectedSpriteName.Contains("ß§"))
+            else if (selectedSpriteName.Contains("ß§") || selectedSpriteName.Contains("R”»"))
             {
                 _cardStateText.text = "UŒ‚‘ÎÛ‚ÆA©•ª‚ÌHP‚ğ“™‚µ‚­”z•ª‚µ‚È‚¨‚·";
             }
@@ -186,7 +186,7 @@ public class UIController : MonoBehaviour
             {
                 _cardStateText.text = "‘Ì—Í‚ªŒ¸‚é‘ã‚í‚è‚É‹­—Í‚ÈUŒ‚";
             }
-            else if (selectedSpriteName.Contains("³‹`"))
+            else if (selectedSpriteName.Contains("³‹`") || selectedSpriteName.Contains("¢ŠE"))
             {
                 _cardStateText.text = "1ƒ^[ƒ“–³“G‚É‚È‚é";
             }
@@ -194,7 +194,14 @@ public class UIController : MonoBehaviour
             {
                 _cardStateText.text = "ƒ‰ƒ“ƒ_ƒ€‚Å1ƒ^[ƒ“–³“G‚É‚È‚é";
             }
-            
+            else if (selectedSpriteName.Contains("ˆ«–‚"))
+            {
+                _cardStateText.text = "©•ª‚Éƒ_ƒ[ƒW‚ª“ü‚è‚Ü‚·";
+            }
+            else if (selectedSpriteName.Contains("Œ") || selectedSpriteName.Contains("¯") || selectedSpriteName.Contains("‘¾—z"))
+            {
+                _cardStateText.text = "¯‚ÆŒ‚Æ‘¾—z‚ğ‚Æ‚é‚Æ’´âƒ_ƒ[ƒW";
+            }
             else
             {
                 _cardStateText.text = "“Á‚É‚È‚µ";
@@ -219,7 +226,7 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Add(StateFlag.InstantDeath);
             }
-            else if (image.sprite.name.Contains("–‚pt") || image.sprite.name.Contains("—Í"))
+            else if (image.sprite.name.Contains("–‚pt") || image.sprite.name.Contains("—Í") || image.sprite.name.Contains("c’é"))
             {
                 _stateFlags.Add(StateFlag.PowerUp);
             }
@@ -231,7 +238,7 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Add(StateFlag.GuardUp);
             }
-            else if (image.sprite.name.Contains("ß§"))
+            else if (image.sprite.name.Contains("ß§") || image.sprite.name.Contains("R”»"))
             {
                 _stateFlags.Add(StateFlag.Average);
             }
@@ -271,13 +278,29 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Add(StateFlag.RiskyAttack);
             }
-            else if (image.sprite.name.Contains("³‹`"))
+            else if (image.sprite.name.Contains("³‹`") || image.sprite.name.Contains("¢ŠE"))
             {
                 _stateFlags.Add(StateFlag.ParfectGuard);
             }
             else if (image.sprite.name.Contains("‰BÒ"))
             {
                 _stateFlags.Add(StateFlag.RandomGuard);
+            }
+            else if (image.sprite.name.Contains("ˆ«–‚"))
+            {
+                _stateFlags.Add(StateFlag.SelfHarm);
+            }
+            else if (image.sprite.name.Contains("¯"))
+            {
+                _stateFlags.Add(StateFlag.Star);
+            }
+            else if (image.sprite.name.Contains("Œ"))
+            {
+                _stateFlags.Add(StateFlag.Moon);
+            }
+            else if (image.sprite.name.Contains("‘¾—z"))
+            {
+                _stateFlags.Add(StateFlag.Sun);
             }
         }
         else
@@ -291,7 +314,7 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Remove(StateFlag.InstantDeath);
             }
-            else if (image.sprite.name.Contains("–‚pt") || image.sprite.name.Contains("—Í"))
+            else if (image.sprite.name.Contains("–‚pt") || image.sprite.name.Contains("—Í") || image.sprite.name.Contains("c’é"))
             {
                 _stateFlags.Remove(StateFlag.PowerUp);
             }
@@ -303,7 +326,7 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Remove(StateFlag.GuardUp);
             }
-            else if (image.sprite.name.Contains("ß§"))
+            else if (image.sprite.name.Contains("ß§") || image.sprite.name.Contains("R”»"))
             {
                 _stateFlags.Remove(StateFlag.Average);
             }
@@ -323,13 +346,29 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Remove(StateFlag.RiskyAttack);
             }
-            else if (image.sprite.name.Contains("³‹`"))
+            else if (image.sprite.name.Contains("³‹`") || image.sprite.name.Contains("¢ŠE"))
             {
                 _stateFlags.Remove(StateFlag.ParfectGuard);
             }
             else if (image.sprite.name.Contains("‰BÒ"))
             {
                 _stateFlags.Remove(StateFlag.RandomGuard);
+            }
+            else if (image.sprite.name.Contains("ˆ«–‚"))
+            {
+                _stateFlags.Remove(StateFlag.SelfHarm);
+            }
+            else if (image.sprite.name.Contains("¯"))
+            {
+                _stateFlags.Remove(StateFlag.Star);
+            }
+            else if (image.sprite.name.Contains("Œ"))
+            {
+                _stateFlags.Remove(StateFlag.Moon);
+            }
+            else if (image.sprite.name.Contains("‘¾—z"))
+            {
+                _stateFlags.Remove(StateFlag.Sun);
             }
         }
 
@@ -357,7 +396,11 @@ public class UIController : MonoBehaviour
         bool instanceDeath = false;
         //ƒ_ƒ[ƒW•â³‚ğ’Ç‰Á
         //ƒtƒ‰ƒO‚ª—§‚Â‚Æ‘¦€Œø‰Ê‚ğŠm—¦‚Å”­¶
-        if (_fool == StateFlag.InstantDeath || _stateFlags.Contains(StateFlag.InstantDeath))
+        if (_stateFlags.Contains(StateFlag.Star) && _stateFlags.Contains(StateFlag.Sun) && _stateFlags.Contains(StateFlag.Moon))
+        {
+            _gDamage = _gDamage * 20;
+        }
+        else if (_fool == StateFlag.InstantDeath || _stateFlags.Contains(StateFlag.InstantDeath))
         {
             if (UnityEngine.Random.Range(0, 10) < 5)
             {
@@ -423,6 +466,12 @@ public class UIController : MonoBehaviour
                 Debug.Log("guard¬Œ÷");
             }
         }
+        //©damage
+        if ((_stateFlags.Contains(StateFlag.SelfHarm) || _fool == StateFlag.SelfHarm))
+        {
+            _playerController.PlayerHPUp(20f);
+        }
+
         // ƒtƒ‰ƒO‚Ì‰Šú‰»
         _stateFlags.Clear();
         _fool = StateFlag.Normal;
@@ -466,6 +515,9 @@ public class UIController : MonoBehaviour
         PowerHeal,
         RandomGuard,
         SelfHarm,
+        Star,
+        Moon,
+        Sun
     }
 
     public void EffectEnd()
