@@ -47,6 +47,9 @@ public class GoblinController : MonoBehaviour
 
     PlayerController _playerController;
 
+    /// <summary>SlipDamageのターン数</summary>
+    int _slipTurn;
+
     void Start()
     {
         _currentHP = _hp;
@@ -77,6 +80,7 @@ public class GoblinController : MonoBehaviour
             Instantiate(_HitEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));
             TextMeshPro DText = Instantiate(_damageText, this.transform). GetComponentInChildren<TextMeshPro>();
             DText.text = damage.ToString();
+            GameManager.TotalDamage += damage;
         }
         else
         {
@@ -88,16 +92,14 @@ public class GoblinController : MonoBehaviour
         _hpSlider.DOValue(_currentHP / _hp, 0.5f);
         if (_currentHP <= 0)
         {
-            Debug.Log($"{this.gameObject.name}は死にました");
-            
-            Instantiate(_deathEffect, this.transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
-            Destroy(gameObject);
-
             if (_bossMode)
             {
-                //シーン遷移などいろいろ書く
+                FindObjectOfType<UIController>().Fade(1f, new Color(0, 0, 0, 0), () => SceneManager.LoadScene("ResultScene"));
             }
 
+            Debug.Log($"{this.gameObject.name}は死にました");
+            Instantiate(_deathEffect, this.transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
+            Destroy(gameObject);
         }
     }
 }
