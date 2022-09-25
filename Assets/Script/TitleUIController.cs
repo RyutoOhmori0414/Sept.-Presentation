@@ -16,6 +16,8 @@ public class TitleUIController : MonoBehaviour
     [Tooltip("フェードに使うパネル"), SerializeField]
     GameObject _fadeImage;
 
+    [SerializeField]
+    TitleAudioController _audioController;
     //[Header("ヘルプ")]
     //[Tooltip("ヘルプ時に表示されるPanel"), SerializeField]
     //GameObject _helpPanel;
@@ -34,6 +36,7 @@ public class TitleUIController : MonoBehaviour
         }
         else if (_lastSelectedObj != EventSystem.current.currentSelectedGameObject)
         {
+            _audioController.ChooseSEPlay();
             _lastSelectedObj = EventSystem.current.currentSelectedGameObject;
         }
     }
