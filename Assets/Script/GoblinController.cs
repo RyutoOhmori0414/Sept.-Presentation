@@ -47,6 +47,8 @@ public class GoblinController : MonoBehaviour
 
     PlayerController _playerController;
 
+    GameSceneAudioController _gameSceneAudioController;
+
     /// <summary>SlipDamageÇÃÉ^Å[Éìêî</summary>
     int _slipTurn;
 
@@ -55,6 +57,7 @@ public class GoblinController : MonoBehaviour
         _currentHP = _hp;
         _currentAttack = _attack;
         _playerController = GameObject.FindObjectOfType<PlayerController>();
+        _gameSceneAudioController = FindObjectOfType<GameSceneAudioController>();
     }
 
     public void DecreaseEnemyHP(float damage, bool instanteDeath = false)
@@ -81,6 +84,7 @@ public class GoblinController : MonoBehaviour
             TextMeshPro DText = Instantiate(_damageText, this.transform). GetComponentInChildren<TextMeshPro>();
             DText.text = damage.ToString();
             GameManager.TotalDamage += damage;
+            _gameSceneAudioController.AttackSE();
         }
         else
         {
@@ -88,6 +92,7 @@ public class GoblinController : MonoBehaviour
             Instantiate(_HealEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));
             TextMeshPro DText = Instantiate(_damageText, this.transform).GetComponentInChildren<TextMeshPro>();
             DText.text = damage.ToString();
+            _gameSceneAudioController.HealSE();
         }
         _hpSlider.DOValue(_currentHP / _hp, 0.5f);
         if (_currentHP <= 0)

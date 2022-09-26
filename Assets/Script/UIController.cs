@@ -45,7 +45,7 @@ public class UIController : MonoBehaviour
     PlayerController _playerController;
     GameManager _gameManager;
     EventSystem _currentES = default;
-
+    GameSceneAudioController _gameSceneAudioController;
     GameObject _lastSelectedObj;
 
     StateFlag _fool = StateFlag.Normal;
@@ -55,6 +55,7 @@ public class UIController : MonoBehaviour
     float _gDamage = default;
     /// <summary>ÉGÉlÉ~Å[Ç™ÉvÉåÉCÉÑÅ[Ç…ó^Ç¶ÇÈÉ_ÉÅÅ[ÉW</summary>
     float _pDamage = default;
+    bool _select = false;
 
     private void Update()
     {
@@ -65,12 +66,17 @@ public class UIController : MonoBehaviour
         else if (_lastSelectedObj != _currentES.currentSelectedGameObject)
         {
             OnSelect(_currentES.currentSelectedGameObject);
+            if (_select)
+            {
+                _gameSceneAudioController.OnButtonSelectedSE();
+            }
             _lastSelectedObj = _currentES.currentSelectedGameObject;
         }
     }
     private void OnEnable()
     {
         _gameManager = GetComponent<GameManager>();
+        _gameSceneAudioController = FindObjectOfType<GameSceneAudioController>();
         _gameManager.OnBeginTurn += BeginTurnUI;
         _gameManager.OnEndTurn += EndTurnUI;
     }
@@ -96,6 +102,7 @@ public class UIController : MonoBehaviour
 
     void BeginTurnUI()
     {
+        _select = true;
         _selectAndEnd.ForEach(i => i.SetActive(true));
         _cardMuzzles.ForEach(i => i.SetActive(true));
         ShuffleCard();
@@ -150,55 +157,55 @@ public class UIController : MonoBehaviour
         {
             string selectedSpriteName = sgameObject.GetComponent<Image>().sprite.name;
 
-            if (selectedSpriteName.Contains("éÄê_") || selectedSpriteName.Contains("í›ÇÈÇ≥ÇÍÇΩíj"))
+            if (selectedSpriteName.Contains("Death") || selectedSpriteName.Contains("HangedMan"))
             {
                 _cardStateText.text = "ämó¶Ç≈ë¶éÄå¯â Ç™ïtó^Ç≥ÇÍÇÈ";
             }
-            else if (selectedSpriteName.Contains("ñÇèpét") || selectedSpriteName.Contains("óÕ") || selectedSpriteName.Contains("çcíÈ"))
+            else if (selectedSpriteName.Contains("Magician") || selectedSpriteName.Contains("Strength") || selectedSpriteName.Contains("Emperor"))
             {
                 _cardStateText.text = "é©êgÇÃçUåÇóÕÇ™àÍéûìIÇ…è„è∏Ç∑ÇÈÅI";
             }
-            else if (selectedSpriteName.Contains("êÌé‘"))
+            else if (selectedSpriteName.Contains("Chariot"))
             {
                 _cardStateText.text = "é©êgÇÃñhå‰óÕÇ™àÍéûìIÇ…è„è∏Ç∑ÇÈÅI";
             }
-            else if (selectedSpriteName.Contains("êﬂêß") || selectedSpriteName.Contains("êRîª"))
+            else if (selectedSpriteName.Contains("Temperance") || selectedSpriteName.Contains("Judgement"))
             {
                 _cardStateText.text = "çUåÇëŒè€Ç∆ÅAé©ï™ÇÃHPÇìôÇµÇ≠îzï™ÇµÇ»Ç®Ç∑";
             }
-            else if (selectedSpriteName.Contains("èóíÈ") || selectedSpriteName.Contains("óˆêl"))
+            else if (selectedSpriteName.Contains("Empress") || selectedSpriteName.Contains("Lovers"))
             {
                 _cardStateText.text = "é©êgÇÃçUåÇÇ…âÒïúå¯â Ç™ïtó^Ç≥ÇÍÇÈ";
             }
-            else if (selectedSpriteName.Contains("_ã≥çc"))
+            else if (selectedSpriteName.Contains("Hierophant"))
             {
                 _cardStateText.text = "ëÃóÕÇëSâÒïú";
             }
-            else if (selectedSpriteName.Contains("èóã≥çc"))
+            else if (selectedSpriteName.Contains("Priestes"))
             {
                 _cardStateText.text = "ëÃóÕè„å¿ÉAÉbÉv";
             }
-            else if (selectedSpriteName.Contains("ãé“") || selectedSpriteName.Contains("â^ñΩÇÃó÷"))
+            else if (selectedSpriteName.Contains("Fool") || selectedSpriteName.Contains("Fortune"))
             {
                 _cardStateText.text = "ÉâÉìÉ_ÉÄÇ≈í«â¡å¯â Ç™î≠ê∂Ç∑ÇÈ";
             }
-            else if (selectedSpriteName.Contains("ìÉ"))
+            else if (selectedSpriteName.Contains("Tower"))
             {
                 _cardStateText.text = "ëÃóÕÇ™å∏ÇÈë„ÇÌÇËÇ…ã≠óÕÇ»çUåÇ";
             }
-            else if (selectedSpriteName.Contains("ê≥ã`") || selectedSpriteName.Contains("ê¢äE"))
+            else if (selectedSpriteName.Contains("Justice") || selectedSpriteName.Contains("World"))
             {
                 _cardStateText.text = "1É^Å[Éìñ≥ìGÇ…Ç»ÇÈ";
             }
-            else if (selectedSpriteName.Contains("âBé“"))
+            else if (selectedSpriteName.Contains("Harmit"))
             {
                 _cardStateText.text = "ÉâÉìÉ_ÉÄÇ≈1É^Å[Éìñ≥ìGÇ…Ç»ÇÈ";
             }
-            else if (selectedSpriteName.Contains("à´ñÇ"))
+            else if (selectedSpriteName.Contains("Devil"))
             {
                 _cardStateText.text = "é©ï™Ç…É_ÉÅÅ[ÉWÇ™ì¸ÇËÇ‹Ç∑";
             }
-            else if (selectedSpriteName.Contains("åé") || selectedSpriteName.Contains("êØ") || selectedSpriteName.Contains("ëæóz"))
+            else if (selectedSpriteName.Contains("Moon") || selectedSpriteName.Contains("Star") || selectedSpriteName.Contains("Sun"))
             {
                 _cardStateText.text = "êØÇ∆åéÇ∆ëæózÇÇ∆ÇÈÇ∆í¥ê‚É_ÉÅÅ[ÉW";
             }
@@ -222,35 +229,35 @@ public class UIController : MonoBehaviour
             image.color = Color.gray;
 
             //ì¡éÍå¯â Ç™Ç†ÇÈÉJÅ[ÉhÇ™ëIÇŒÇÍÇΩç€ÉtÉâÉOÇóßÇƒÇÈ
-            if (image.sprite.name.Contains("éÄê_") || image.sprite.name.Contains("í›ÇÈÇ≥ÇÍÇΩíj"))
+            if (image.sprite.name.Contains("Death") || image.sprite.name.Contains("HangedMan"))
             {
                 _stateFlags.Add(StateFlag.InstantDeath);
             }
-            else if (image.sprite.name.Contains("ñÇèpét") || image.sprite.name.Contains("óÕ") || image.sprite.name.Contains("çcíÈ"))
+            else if (image.sprite.name.Contains("Magician") || image.sprite.name.Contains("Strength") || image.sprite.name.Contains("Emperor"))
             {
                 _stateFlags.Add(StateFlag.PowerUp);
             }
-            else if (image.sprite.name.Contains("èóã≥çc"))
+            else if (image.sprite.name.Contains("Priestes"))
             {
                 _stateFlags.Add(StateFlag.HPUp);
             }
-            else if (image.sprite.name.Contains("êÌé‘"))
+            else if (image.sprite.name.Contains("Chariot"))
             {
                 _stateFlags.Add(StateFlag.GuardUp);
             }
-            else if (image.sprite.name.Contains("êﬂêß") || image.sprite.name.Contains("êRîª"))
+            else if (image.sprite.name.Contains("Temperance") || image.sprite.name.Contains("Judgement"))
             {
                 _stateFlags.Add(StateFlag.Average);
             }
-            else if (image.sprite.name.Contains("èóíÈ") || image.sprite.name.Contains("óˆêl"))
+            else if (image.sprite.name.Contains("Empress") || image.sprite.name.Contains("Lovers"))
             {
                 _stateFlags.Add(StateFlag.Heal);
             }
-            else if (image.sprite.name.Contains("_ã≥çc"))
+            else if (image.sprite.name.Contains("Hierophant"))
             {
                 _stateFlags.Add(StateFlag.PowerHeal);
             }
-            else if (image.sprite.name.Contains("ãé“") || image.sprite.name.Contains("â^ñΩÇÃó÷"))
+            else if (image.sprite.name.Contains("Fool") || image.sprite.name.Contains("Fortune"))
             {
                 int randomValue = UnityEngine.Random.Range(0, 5);
                 if (randomValue == 0)
@@ -274,31 +281,31 @@ public class UIController : MonoBehaviour
                     _fool = StateFlag.Heal;
                 }
             }
-            else if (image.sprite.name.Contains("ìÉ"))
+            else if (image.sprite.name.Contains("Tower"))
             {
                 _stateFlags.Add(StateFlag.RiskyAttack);
             }
-            else if (image.sprite.name.Contains("ê≥ã`") || image.sprite.name.Contains("ê¢äE"))
+            else if (image.sprite.name.Contains("Justice") || image.sprite.name.Contains("World"))
             {
                 _stateFlags.Add(StateFlag.ParfectGuard);
             }
-            else if (image.sprite.name.Contains("âBé“"))
+            else if (image.sprite.name.Contains("Harmit"))
             {
                 _stateFlags.Add(StateFlag.RandomGuard);
             }
-            else if (image.sprite.name.Contains("à´ñÇ"))
+            else if (image.sprite.name.Contains("Devil"))
             {
                 _stateFlags.Add(StateFlag.SelfHarm);
             }
-            else if (image.sprite.name.Contains("êØ"))
+            else if (image.sprite.name.Contains("Star"))
             {
                 _stateFlags.Add(StateFlag.Star);
             }
-            else if (image.sprite.name.Contains("åé"))
+            else if (image.sprite.name.Contains("Moon"))
             {
                 _stateFlags.Add(StateFlag.Moon);
             }
-            else if (image.sprite.name.Contains("ëæóz"))
+            else if (image.sprite.name.Contains("Sun"))
             {
                 _stateFlags.Add(StateFlag.Sun);
             }
@@ -310,63 +317,63 @@ public class UIController : MonoBehaviour
             image.color = Color.white;
 
             //ì¡éÍå¯â Ç™Ç†ÇÈÉJÅ[ÉhÇÃëIëÇ™âèúÇ≥ÇÍÇΩç€ÉtÉâÉOÇ‡éÊÇËè¡Ç∑
-            if (image.sprite.name.Contains("éÄê_") || image.sprite.name.Contains("í›ÇÈÇ≥ÇÍÇΩíj"))
+            if (image.sprite.name.Contains("Death") || image.sprite.name.Contains("HangedMan"))
             {
                 _stateFlags.Remove(StateFlag.InstantDeath);
             }
-            else if (image.sprite.name.Contains("ñÇèpét") || image.sprite.name.Contains("óÕ") || image.sprite.name.Contains("çcíÈ"))
+            else if (image.sprite.name.Contains("Magician") || image.sprite.name.Contains("Strength") || image.sprite.name.Contains("Emperor"))
             {
                 _stateFlags.Remove(StateFlag.PowerUp);
             }
-            else if (image.sprite.name.Contains("èóã≥çc"))
+            else if (image.sprite.name.Contains("Priestes"))
             {
                 _stateFlags.Remove(StateFlag.HPUp);
             }
-            else if (image.sprite.name.Contains("êÌé‘"))
+            else if (image.sprite.name.Contains("Chariot"))
             {
                 _stateFlags.Remove(StateFlag.GuardUp);
             }
-            else if (image.sprite.name.Contains("êﬂêß") || image.sprite.name.Contains("êRîª"))
+            else if (image.sprite.name.Contains("Temperance") || image.sprite.name.Contains("Judgement"))
             {
                 _stateFlags.Remove(StateFlag.Average);
             }
-            else if (image.sprite.name.Contains("èóíÈ") || image.sprite.name.Contains("óˆêl"))
+            else if (image.sprite.name.Contains("Empress") || image.sprite.name.Contains("Lovers"))
             {
                 _stateFlags.Remove(StateFlag.Heal);
             }
-            else if (image.sprite.name.Contains("_ã≥çc"))
+            else if (image.sprite.name.Contains("Hierophant"))
             {
                 _stateFlags.Remove(StateFlag.PowerHeal);
             }
-            else if (image.sprite.name.Contains("ãé“") || image.sprite.name.Contains("â^ñΩÇÃó÷"))
+            else if (image.sprite.name.Contains("Fool") || image.sprite.name.Contains("Fortune"))
             {
                 _fool = StateFlag.Normal;
             }
-            else if (image.sprite.name.Contains("ìÉ"))
+            else if (image.sprite.name.Contains("Tower"))
             {
                 _stateFlags.Remove(StateFlag.RiskyAttack);
             }
-            else if (image.sprite.name.Contains("ê≥ã`") || image.sprite.name.Contains("ê¢äE"))
+            else if (image.sprite.name.Contains("Justice") || image.sprite.name.Contains("World"))
             {
                 _stateFlags.Remove(StateFlag.ParfectGuard);
             }
-            else if (image.sprite.name.Contains("âBé“"))
+            else if (image.sprite.name.Contains("Harmit"))
             {
                 _stateFlags.Remove(StateFlag.RandomGuard);
             }
-            else if (image.sprite.name.Contains("à´ñÇ"))
+            else if (image.sprite.name.Contains("Devil"))
             {
                 _stateFlags.Remove(StateFlag.SelfHarm);
             }
-            else if (image.sprite.name.Contains("êØ"))
+            else if (image.sprite.name.Contains("Star"))
             {
                 _stateFlags.Remove(StateFlag.Star);
             }
-            else if (image.sprite.name.Contains("åé"))
+            else if (image.sprite.name.Contains("Moon"))
             {
                 _stateFlags.Remove(StateFlag.Moon);
             }
-            else if (image.sprite.name.Contains("ëæóz"))
+            else if (image.sprite.name.Contains("Sun"))
             {
                 _stateFlags.Remove(StateFlag.Sun);
             }
@@ -487,6 +494,7 @@ public class UIController : MonoBehaviour
 
     void EndTurnUI()
     {
+        _select = false;
         _selectAndEnd.ForEach(i => i.SetActive(false));
         _cardMuzzles.ForEach(i => i.SetActive(false));
     }

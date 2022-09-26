@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 
 public class ResultUIController : MonoBehaviour
@@ -20,6 +21,9 @@ public class ResultUIController : MonoBehaviour
     [Tooltip("表示するsprite"), SerializeField]
     Sprite[] _scoreSprites;
 
+    [Header("ボタン")]
+    [Tooltip("タイトルに遷移するボタン"), SerializeField]
+    GameObject _toTitleButton;
     Image _fadeImage;
 
     private void Start()
@@ -107,6 +111,14 @@ public class ResultUIController : MonoBehaviour
         });
         //評価をフェードさせる
         seq.Append(_scoreImage[2].DOFade(1f, 2f));
+        seq.AppendCallback(() => _toTitleButton.SetActive(true));
+    }
 
+    public void ToTitleScene()
+    {
+        _fadePanel.SetActive(true);
+        var panelImage = _fadePanel.GetComponent<Image>();
+        panelImage.color = Color.clear;
+        panelImage.DOFade(1f, 1f).OnComplete(() => SceneManager.LoadScene("TitleScene"));
     }
 }
