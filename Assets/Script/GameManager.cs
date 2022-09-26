@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public static int TurnCount
     {
         get => _turnCount;
+        set => _turnCount = value;
     }
     /// <summary>与えたダメージの合計</summary>
     static float _totalDamage;

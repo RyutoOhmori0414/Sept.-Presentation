@@ -18,6 +18,15 @@ public class TitleUIController : MonoBehaviour
 
     [SerializeField]
     TitleAudioController _audioController;
+
+    [Tooltip("volume調整用のスライダー"), SerializeField]
+    Slider _volumeSlider;
+    
+    static float _volume = 0.5f;
+    public static float Volume
+    {
+        get => _volume;
+    }
     //[Header("ヘルプ")]
     //[Tooltip("ヘルプ時に表示されるPanel"), SerializeField]
     //GameObject _helpPanel;
@@ -27,6 +36,13 @@ public class TitleUIController : MonoBehaviour
     //GameObject _settingPanel;
 
     GameObject _lastSelectedObj;
+
+    private void Start()
+    {
+        _volumeSlider.value = _volume;
+        GameManager.TotalDamage = 0;
+        GameManager.TurnCount = 0;
+    }
 
     private void Update()
     {
@@ -39,6 +55,8 @@ public class TitleUIController : MonoBehaviour
             _audioController.ChooseSEPlay(true);
             _lastSelectedObj = EventSystem.current.currentSelectedGameObject;
         }
+
+        _volume = _volumeSlider.value;
     }
     public void ButtonUsable(bool isUsed)
     {

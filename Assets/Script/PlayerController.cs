@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     [Tooltip("タイトルに戻るためのButton"), SerializeField]
     GameObject _toTitleButton;
 
+    [Tooltip("効果音のためのオーディオソース"), SerializeField]
+    GameSceneAudioController _gameSceneAudioController;
+    VibrationController _vibrationController;
+
     public float PlayerAttack
     {
         get => _playerAttack;
@@ -38,6 +42,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        _vibrationController = GetComponent<VibrationController>();
         _currentPlayerHP = _playerHP;
     }
 
@@ -76,11 +81,15 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log($"Playerは{damege}ダメージ受けた");
             _playerImpulseSource.GenerateImpulse();
+            //効果音再生
+            _gameSceneAudioController.AttackSE();
+            StartCoroutine(_vibrationController.Vibration());
         }
         else
         {
             Debug.Log($"Playerは{-damege}回復した");
-            //回復エフェクト
+            //効果音再生
+            _gameSceneAudioController.HealSE();
         }
         _playerHPSlider.DOValue(_currentPlayerHP / _playerHP, 1f);
 
@@ -90,6 +99,7 @@ public class PlayerController : MonoBehaviour
             {
                 _redPanel.SetActive(true);
                 _imageLogo.SetActive(true);
+                _gameSceneAudioController.GameOverBGM();
                 _imageLogo.GetComponent<Image>().DOFade(1f, 1f).OnComplete(() =>
                 {
                     _toTitleButton.SetActive(true);
