@@ -1877,9 +1877,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _seAudioSource: {fileID: 902942715}
+  _bgmAudioSource: {fileID: 902942716}
   _seSelectClip: {fileID: 8300000, guid: 81f0661128616ed43b2a7c498f53533d, type: 3}
   _attackClip: {fileID: 8300000, guid: 88c62f00cb44c8b459cf0ce476fe0781, type: 3}
   _healClip: {fileID: 8300000, guid: e38a18cf57c81bd40b1945075df1b6cb, type: 3}
+  _gameOverClip: {fileID: 8300000, guid: edee88c7cdfca314aa77349af1f0df6b, type: 3}
 --- !u!1 &922502606
 GameObject:
   m_ObjectHideFlags: 0
@@ -1969,6 +1971,7 @@ GameObject:
   - component: {fileID: 1016859369}
   - component: {fileID: 1016859370}
   - component: {fileID: 1016859371}
+  - component: {fileID: 1016859372}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2067,13 +2070,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78cac8d29417d8045a34b305f250a349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerHP: 1
+  _playerHP: 500
   _playerHPSlider: {fileID: 710926762}
   _playerAttack: 30
   _playerImpulseSource: {fileID: 1541818469}
   _redPanel: {fileID: 1813447535}
   _imageLogo: {fileID: 717762513}
   _toTitleButton: {fileID: 1643516475}
+  _gameSceneAudioController: {fileID: 902942718}
 --- !u!114 &1016859371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2086,9 +2090,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d5464ed154bc1d46b356880cf9d2770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wave1Enemies: {fileID: 1596818413894637676, guid: d43ff3c740b2b9c459b8d67f35ff28a3, type: 3}
+  _wave1Enemies: {fileID: 2431325114939747190, guid: 7cb3f172615c18648a7c39501155ed5e, type: 3}
   _wave2Enemies: {fileID: 7971709059896672448, guid: 609a1de90cc55084d98ace7d118996da, type: 3}
-  _waveBossEnemies: {fileID: 9090749876913995863, guid: 04fa53309b585e546a42a9aacedc0901, type: 3}
+  _waveBossEnemies: {fileID: 1596818413894637676, guid: d43ff3c740b2b9c459b8d67f35ff28a3, type: 3}
+--- !u!114 &1016859372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1016859366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eff28f04b11f8f948b3a8c2f3b0a4cdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1075057818
 GameObject:
   m_ObjectHideFlags: 0

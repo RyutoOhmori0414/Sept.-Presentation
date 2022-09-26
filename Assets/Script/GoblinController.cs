@@ -52,10 +52,12 @@ public class GoblinController : MonoBehaviour
     /// <summary>SlipDamageのターン数</summary>
     int _slipTurn;
 
+    VibrationController _vibrationController;
     void Start()
     {
         _currentHP = _hp;
         _currentAttack = _attack;
+        _vibrationController = FindObjectOfType<VibrationController>();
         _playerController = GameObject.FindObjectOfType<PlayerController>();
         _gameSceneAudioController = FindObjectOfType<GameSceneAudioController>();
     }
@@ -80,6 +82,7 @@ public class GoblinController : MonoBehaviour
         else if (damage > 0)
         {
             Debug.Log($"Enemyは{damage}ダメージ受けた！！");
+            StartCoroutine(_vibrationController.Vibration());
             Instantiate(_HitEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));
             TextMeshPro DText = Instantiate(_damageText, this.transform). GetComponentInChildren<TextMeshPro>();
             DText.text = damage.ToString();

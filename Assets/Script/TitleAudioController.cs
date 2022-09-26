@@ -4,14 +4,23 @@ using UnityEngine;
 
 public class TitleAudioController : MonoBehaviour
 {
-    [Tooltip("使用するオーディオソース"), SerializeField]
+    [Tooltip("使用するSEオーディオソース"), SerializeField]
     AudioSource _seAudioSource;
+
+    [Tooltip("使用するBGMオーディオソース"), SerializeField]
+    AudioSource _bgmAudioSource;
 
     [Tooltip("Selectが切り替わったときの音"), SerializeField]
     AudioClip _chooseSE;
 
     [Tooltip("決定音"), SerializeField]
     AudioClip _selectSE;
+
+    private void Update()
+    {
+        _seAudioSource.volume = TitleUIController.Volume;
+        _bgmAudioSource.volume = TitleUIController.Volume / 4f;
+    }
 
     public void ChooseSEPlay(bool choose = false)
     {

@@ -197,7 +197,7 @@ public class UIController : MonoBehaviour
             {
                 _cardStateText.text = "1ターン無敵になる";
             }
-            else if (selectedSpriteName.Contains("Harmit"))
+            else if (selectedSpriteName.Contains("Hermit"))
             {
                 _cardStateText.text = "ランダムで1ターン無敵になる";
             }
@@ -289,7 +289,7 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Add(StateFlag.ParfectGuard);
             }
-            else if (image.sprite.name.Contains("Harmit"))
+            else if (image.sprite.name.Contains("Hermit"))
             {
                 _stateFlags.Add(StateFlag.RandomGuard);
             }
@@ -357,7 +357,7 @@ public class UIController : MonoBehaviour
             {
                 _stateFlags.Remove(StateFlag.ParfectGuard);
             }
-            else if (image.sprite.name.Contains("Harmit"))
+            else if (image.sprite.name.Contains("Hermit"))
             {
                 _stateFlags.Remove(StateFlag.RandomGuard);
             }
