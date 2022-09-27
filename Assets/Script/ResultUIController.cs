@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using DG.Tweening;
 
 public class ResultUIController : MonoBehaviour
@@ -32,7 +33,7 @@ public class ResultUIController : MonoBehaviour
         float wave = GameManager.TurnCount;
         float totalDamage = GameManager.TotalDamage;
         //スコア算出
-        float score = (wave > 30 ? 0 : 30 - wave) * 1000 + totalDamage * 100;
+        float score = (wave > 30 ? 0 : 30 - wave) * 1000 + totalDamage * 300;
 
         //フェードさせてActiveをfalseにしてる
         _fadeImage = _fadePanel.GetComponent<Image>();
@@ -68,15 +69,15 @@ public class ResultUIController : MonoBehaviour
         //スコアにより評価を変える
         seq.AppendCallback(() =>
         {
-            if (1000 > totalDamage)
+            if (400 > totalDamage)
             {
                 _scoreImage[1].sprite = _scoreSprites[3];
             }
-            else if (2000 > totalDamage)
+            else if (700 > totalDamage)
             {
                 _scoreImage[1].sprite = _scoreSprites[2];
             }
-            else if (3000 > totalDamage)
+            else if (1000 > totalDamage)
             {
                 _scoreImage[1].sprite = _scoreSprites[1];
             }
@@ -92,15 +93,15 @@ public class ResultUIController : MonoBehaviour
         //スコアにより評価を変える
         seq.AppendCallback(() =>
         {
-            if (20000 > score)
+            if (200000 > score)
             {
                 _scoreImage[2].sprite = _scoreSprites[3];
             }
-            else if (20000 > score)
+            else if (300000 > score)
             {
                 _scoreImage[2].sprite = _scoreSprites[2];
             }
-            else if (30000 > score)
+            else if (400000 > score)
             {
                 _scoreImage[2].sprite = _scoreSprites[1];
             }

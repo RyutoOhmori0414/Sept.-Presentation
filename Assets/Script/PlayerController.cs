@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
             _playerImpulseSource.GenerateImpulse();
             //å¯â âπçƒê∂
             _gameSceneAudioController.AttackSE();
-            StartCoroutine(_vibrationController.Vibration());
+            _vibrationController.StartVibration();
         }
         else
         {

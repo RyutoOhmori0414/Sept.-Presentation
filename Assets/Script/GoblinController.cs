@@ -82,7 +82,7 @@ public class GoblinController : MonoBehaviour
         else if (damage > 0)
         {
             Debug.Log($"Enemyは{damage}ダメージ受けた！！");
-            StartCoroutine(_vibrationController.Vibration());
+            _vibrationController.StartVibration();
             Instantiate(_HitEffect1, this.transform.position, new Quaternion(0, 0, 0, 0));
             TextMeshPro DText = Instantiate(_damageText, this.transform). GetComponentInChildren<TextMeshPro>();
             DText.text = damage.ToString();

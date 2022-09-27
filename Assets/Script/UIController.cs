@@ -10,13 +10,16 @@ public class UIController : MonoBehaviour
 {
     [Header("ボタン関係")]
     [Tooltip("カードSelectとエンドボタン")]
-    [SerializeField] List<GameObject> _selectAndEnd = new List<GameObject>();
+    [SerializeField] 
+    List<GameObject> _selectAndEnd = new List<GameObject>();
     [Tooltip("カード選択から戻るボタン")]
-    [SerializeField] GameObject _backButton;
+    [SerializeField] 
+    GameObject _backButton;
 
     [Header("テキスト関係")]
     [Tooltip("あと何枚選べるか表示するテキスト")]
-    [SerializeField] Text _selectableCard;
+    [SerializeField] 
+    Text _selectableCard;
     [Tooltip("Waveが変わった際に現在のWave数を表示する"), SerializeField]
     GameObject _waveTextgo;
     [Tooltip("選んでいるカードの効果を表示するテキストボックス"), SerializeField]
@@ -33,7 +36,8 @@ public class UIController : MonoBehaviour
     [SerializeField] List<Sprite> _cardSprite = new List<Sprite>();
     [Tooltip("選ばれたカード")]
     List<GameObject> _selectedCard = new List<GameObject>();
-    [Header("選べるカードの枚数"), SerializeField] int _cards = default;
+    [Tooltip("選べるカードの枚数"), SerializeField] 
+    int _cards = default;
 
     [Header("その他")]
     [Tooltip("フェードに使うパネル"), SerializeField]
@@ -59,10 +63,12 @@ public class UIController : MonoBehaviour
 
     private void Update()
     {
+        //フォーカスが外れた場合、一個前にフォーカスしていたものにフォーカスを戻す
         if (!_currentES.currentSelectedGameObject)
         {
             _currentES.SetSelectedGameObject(_lastSelectedObj);
         }
+        //フォーカスしているものが変わったときに行われる処理
         else if (_lastSelectedObj != _currentES.currentSelectedGameObject)
         {
             OnSelect(_currentES.currentSelectedGameObject);
@@ -78,10 +84,10 @@ public class UIController : MonoBehaviour
         _gameManager = GetComponent<GameManager>();
         _gameSceneAudioController = FindObjectOfType<GameSceneAudioController>();
         _gameManager.OnBeginTurn += BeginTurnUI;
-        _gameManager.OnEndTurn += EndTurnUI;
     }
     private void Start()
     {
+        //カードのボタンとイメージを配列に入れる
         foreach (var card in _cardMuzzles)
         {
             _cardImages.Add(card.GetComponent<Image>());
@@ -100,6 +106,7 @@ public class UIController : MonoBehaviour
         _cardStateText = _cardStateTextBox.GetComponentInChildren<Text>();
     }
 
+    /// <summary>ターンが始まった際のUIの管理</summary>
     void BeginTurnUI()
     {
         _select = true;
@@ -111,6 +118,7 @@ public class UIController : MonoBehaviour
         _backButton.SetActive(false);
     }
 
+    /// <summary>カードSelect画面に移るときに行うUIの管理</summary>
     public void SelectCard()
     {
         _selectAndEnd.ForEach(i => i.SetActive(false));
@@ -122,6 +130,7 @@ public class UIController : MonoBehaviour
         _cardStateTextBox.SetActive(true);
     }
 
+    /// <summary>カードSelectをやめるときのUIの管理</summary>
     public void SelectButton()
     {
         _selectAndEnd.ForEach(i => i.SetActive(true));
@@ -133,30 +142,33 @@ public class UIController : MonoBehaviour
         _cardStateTextBox.SetActive(false);
     }
 
+    /// <summary>選択するカードをシャッフルする</summary>
     void ShuffleCard()
     {
+        //カードのスプライトをコピーする
         var copySprite = new List<Sprite>(_cardSprite);
-        foreach (var card in _cardImages)
+        //カードのイメージをランダムで被らないように表示させる
+        _cardImages.ForEach(i =>
         {
-            int RSpriteIndex = UnityEngine.Random.Range(0, copySprite.Count);
-            card.sprite = copySprite[RSpriteIndex];
-            card.SetNativeSize();
-            copySprite.RemoveAt(RSpriteIndex);
-        }
+            int rSpriteIndex = UnityEngine.Random.Range(0, copySprite.Count);
+            i.sprite = copySprite[rSpriteIndex];
+            i.SetNativeSize();
+            copySprite.RemoveAt(rSpriteIndex);
+        });
     }
-    public void OnTestSelected(BaseEventData eventData)
-    {
-        Debug.Log("Test動いた");
-        Debug.Log(eventData.selectedObject.name);
-    }
-
-    //カードをSelectしている際にSelectしているカードの効果を出力する
+    
+    /// <summary>
+    /// カードをSelectしている際にSelectしているカードの効果を出力する
+    /// </summary>
+    /// <param name="sgameObject"></param>
     public void OnSelect(GameObject sgameObject)
     {
+        //フォーカスが当たっているのがカードかどうか確認
         if (sgameObject.CompareTag("Card"))
         {
             string selectedSpriteName = sgameObject.GetComponent<Image>().sprite.name;
 
+            //カードのスプライトの名前で判定して効果のテキストを変える
             if (selectedSpriteName.Contains("Death") || selectedSpriteName.Contains("HangedMan"))
             {
                 _cardStateText.text = "確率で即死効果が付与される";
@@ -214,21 +226,27 @@ public class UIController : MonoBehaviour
                 _cardStateText.text = "特になし";
             }
         }
+        //カードが選ばれていないときは何も表示しない
         else
         {
             _cardStateText.text = "";
         }
     }
 
+    /// <summary>
+    /// カード（ボタン）が押されたときにそのカードのGameObjectを取ってくる
+    /// </summary>
+    /// <param name="go"></param>
     public void ButtonGetGameObject(GameObject go)
     {
+        //選んだカードが入れられている配列にgoが入っていないときフラグを立てて、その配列に加える
         if (!_selectedCard.Contains(go))
         {
             _selectedCard.Add(go);
             Image image = go.GetComponent<Image>();
             image.color = Color.gray;
 
-            //特殊効果があるカードが選ばれた際フラグを立てる
+            //スプライトの名前で判断してフラグを立てる
             if (image.sprite.name.Contains("Death") || image.sprite.name.Contains("HangedMan"))
             {
                 _stateFlags.Add(StateFlag.InstantDeath);
@@ -259,6 +277,7 @@ public class UIController : MonoBehaviour
             }
             else if (image.sprite.name.Contains("Fool") || image.sprite.name.Contains("Fortune"))
             {
+                //ランダム効果の場合一括管理するとフラグを取り消す際に難しくなるため別で変数を用意してそこで管理する
                 int randomValue = UnityEngine.Random.Range(0, 5);
                 if (randomValue == 0)
                 {
@@ -310,13 +329,14 @@ public class UIController : MonoBehaviour
                 _stateFlags.Add(StateFlag.Sun);
             }
         }
+        //すでにそのカードが選ばれている場合は選択状態を解除して、立てられたフラグを消す
         else
         {
             _selectedCard.Remove(go);
             Image image = go.GetComponent<Image>();
             image.color = Color.white;
 
-            //特殊効果があるカードの選択が解除された際フラグも取り消す
+            //選ばれたカードの選択が解除された際フラグも取り消す
             if (image.sprite.name.Contains("Death") || image.sprite.name.Contains("HangedMan"))
             {
                 _stateFlags.Remove(StateFlag.InstantDeath);
@@ -379,8 +399,10 @@ public class UIController : MonoBehaviour
             }
         }
 
+        //残り選択可能枚数を表示している
         _selectableCard.text = $"残り{_cards - _selectedCard.Count}枚";
 
+        //選択可能枚数
         if (_selectedCard.Count + 1 > _cards)
         {
             //攻撃するキャラクターを選択する場面に移動
@@ -388,7 +410,7 @@ public class UIController : MonoBehaviour
             _backButton.SetActive(false);
             _cardMuzzles.ForEach(i => i.SetActive(false));
 
-            //直接選べないようにする
+            //エネミーを直接選べないようにする
             var enemyTargets = GameObject.FindGameObjectsWithTag("ArrowMark");
             Array.ForEach(Array.ConvertAll(enemyTargets, i => i.GetComponent<Button>()), i => i.interactable = true);
                 
@@ -396,17 +418,22 @@ public class UIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 立っていたフラグを使いダメージを計算する
+    /// </summary>
+    /// <param name="gc"></param>
     public void PlayerAttack(GoblinController gc)
     {
         _gDamage = _playerController.PlayerAttack;
         _pDamage = gc.Attack;
         bool instanceDeath = false;
         //ダメージ補正を追加
-        //フラグが立つと即死効果を確率で発生
+        //星と太陽と月のフラグが立っていた場合に動く
         if (_stateFlags.Contains(StateFlag.Star) && _stateFlags.Contains(StateFlag.Sun) && _stateFlags.Contains(StateFlag.Moon))
         {
             _gDamage = _gDamage * 20;
         }
+        //フラグが立つと即死効果を確率で発生
         else if (_fool == StateFlag.InstantDeath || _stateFlags.Contains(StateFlag.InstantDeath))
         {
             if (UnityEngine.Random.Range(0, 10) < 5)
@@ -438,11 +465,13 @@ public class UIController : MonoBehaviour
             _gDamage = _gDamage * 1.5f;
             Debug.Log("クリティカル！！");
         }
+
         //フラグが立つとHPアップ
         if ((_stateFlags.Contains(StateFlag.HPUp) || _fool == StateFlag.HPUp))
         {
             _playerController.PlayerHPUp(20f);
         }
+
         //全回復
         if ((_stateFlags.Contains(StateFlag.PowerHeal) || _fool == StateFlag.PowerHeal))
         {
@@ -454,6 +483,7 @@ public class UIController : MonoBehaviour
         {
             _playerController.NoEffectHPChange(-40);
         }
+
         //無敵
         if (_stateFlags.Contains(StateFlag.ParfectGuard) || _fool == StateFlag.ParfectGuard)
         {
@@ -465,6 +495,8 @@ public class UIController : MonoBehaviour
             _pDamage = _pDamage / 2f;
             Debug.Log("ガードアップ！！");
         }
+
+        //ランダムで受けるダメージを0にする
         if (_stateFlags.Contains(StateFlag.RandomGuard) || _fool == StateFlag.RandomGuard)
         {
             if (UnityEngine.Random.Range(0, 2) == 0)
@@ -483,22 +515,23 @@ public class UIController : MonoBehaviour
         _stateFlags.Clear();
         _fool = StateFlag.Normal;
 
+        //エネミーにダメージを与える
         gc.DecreaseEnemyHP(_gDamage, instanceDeath);
-        //_playerController.PlayerDamage(_pDamage);
+        
+        //UIなどの後処理
         _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
         _cardMuzzles.ForEach(i => i.SetActive(false));
         SelectButton();
-        _gameManager.EndTurn();
-    }
-
-
-    void EndTurnUI()
-    {
         _select = false;
         _selectAndEnd.ForEach(i => i.SetActive(false));
         _cardMuzzles.ForEach(i => i.SetActive(false));
+        _gameManager.EndTurn();
     }
 
+    /// <summary>
+    /// 現在のWaveを表示する
+    /// </summary>
+    /// <param name="currentWave"></param>
     public void WaveStartUIText(int currentWave)
     {
         Text waveText =_waveTextgo.GetComponent<Text>();
@@ -528,6 +561,9 @@ public class UIController : MonoBehaviour
         Sun
     }
 
+    /// <summary>
+    /// プレイヤーが攻撃を受ける際に呼び出す
+    /// </summary>
     public void EffectEnd()
     {
         if (GameObject.FindGameObjectWithTag("Enemy"))
@@ -550,6 +586,5 @@ public class UIController : MonoBehaviour
     private void OnDisable()
     {
         _gameManager.OnBeginTurn -= BeginTurnUI;
-        _gameManager.OnEndTurn -= EndTurnUI;
     }
 }
