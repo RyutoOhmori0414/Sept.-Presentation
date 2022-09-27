@@ -5,7 +5,14 @@ using UnityEngine.InputSystem;
 
 public class VibrationController : MonoBehaviour
 {
-    public IEnumerator Vibration()
+    /// <summary>
+    /// バイブレーションをスタートさせる
+    /// </summary>
+    public void StartVibration()
+    {
+        StartCoroutine(Vibration());
+    }
+    IEnumerator Vibration()
     {
         //ゲームパッドが繋がっていなかったらbreak
         if (Gamepad.current == null)
