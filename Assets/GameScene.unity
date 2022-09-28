@@ -484,7 +484,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: DemiGiantChinpo
+  m_Text: DemiGiant
 --- !u!222 &277790842
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2090,7 +2090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d5464ed154bc1d46b356880cf9d2770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wave1Enemies: {fileID: 2431325114939747190, guid: 7cb3f172615c18648a7c39501155ed5e, type: 3}
+  _wave1Enemies: {fileID: 1596818413894637676, guid: d43ff3c740b2b9c459b8d67f35ff28a3, type: 3}
   _wave2Enemies: {fileID: 7971709059896672448, guid: 609a1de90cc55084d98ace7d118996da, type: 3}
   _waveBossEnemies: {fileID: 1596818413894637676, guid: d43ff3c740b2b9c459b8d67f35ff28a3, type: 3}
 --- !u!114 &1016859372

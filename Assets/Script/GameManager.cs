@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     /// <summary>ターンが始まったときに行う</summary>
     public event Action OnBeginTurn;
     /// <summary>ターンが終わったときに行う</summary>
-    //public event Action OnEndTurn;
+    public event Action OnEndTurn;
     /// <summary>ターンのカウント</summary>
     static int _turnCount = 0;
     /// <summary>経過したターン数</summary>
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
 
     public void EndTurn()
     {
-        //OnEndTurn();
+        OnEndTurn();
         Debug.Log($"{_turnCount}ターン目終了");
         Invoke("BeginTurn", 3f);
     }
