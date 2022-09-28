@@ -59,6 +59,7 @@ public class UIController : MonoBehaviour
     float _gDamage = default;
     /// <summary>エネミーがプレイヤーに与えるダメージ</summary>
     float _pDamage = default;
+    /// <summary>自分がカードを選んでいるときtrue</summary>
     bool _select = false;
 
     private void Update()
@@ -84,6 +85,7 @@ public class UIController : MonoBehaviour
         _gameManager = GetComponent<GameManager>();
         _gameSceneAudioController = FindObjectOfType<GameSceneAudioController>();
         _gameManager.OnBeginTurn += BeginTurnUI;
+        _gameManager.OnEndTurn += EndTurnUI;
     }
     private void Start()
     {
@@ -160,13 +162,13 @@ public class UIController : MonoBehaviour
     /// <summary>
     /// カードをSelectしている際にSelectしているカードの効果を出力する
     /// </summary>
-    /// <param name="sgameObject"></param>
-    public void OnSelect(GameObject sgameObject)
+    /// <param name="sGameObject"></param>
+    public void OnSelect(GameObject sGameObject)
     {
         //フォーカスが当たっているのがカードかどうか確認
-        if (sgameObject.CompareTag("Card"))
+        if (sGameObject.CompareTag("Card"))
         {
-            string selectedSpriteName = sgameObject.GetComponent<Image>().sprite.name;
+            string selectedSpriteName = sGameObject.GetComponent<Image>().sprite.name;
 
             //カードのスプライトの名前で判定して効果のテキストを変える
             if (selectedSpriteName.Contains("Death") || selectedSpriteName.Contains("HangedMan"))
@@ -522,6 +524,11 @@ public class UIController : MonoBehaviour
         _selectedCard.ForEach(i => i.GetComponent<Image>().color = Color.white);
         _cardMuzzles.ForEach(i => i.SetActive(false));
         SelectButton();
+    }
+
+    /// <summary>エンドターンで行うUIの操作</summary>
+    void EndTurnUI()
+    {
         _select = false;
         _selectAndEnd.ForEach(i => i.SetActive(false));
         _cardMuzzles.ForEach(i => i.SetActive(false));
@@ -586,5 +593,6 @@ public class UIController : MonoBehaviour
     private void OnDisable()
     {
         _gameManager.OnBeginTurn -= BeginTurnUI;
+        _gameManager.OnEndTurn -= EndTurnUI;
     }
 }
